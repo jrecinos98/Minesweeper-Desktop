@@ -1,6 +1,6 @@
 *.ser
-javadoc/
 build/
+env.sh
 *.class
 *~
 .ant-targets-build.xml
@@ -9,4 +9,3 @@ build/
 .idea/
 .project
 .DS_Store
-HighScore.txt
