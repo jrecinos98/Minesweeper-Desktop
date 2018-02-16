@@ -35,10 +35,10 @@ public class MineGUI {
 	 * @param args args passed into program call
 	 */
 	public static void main (String[] args) {
-		DBConnector.init();
-		mainMenu = new MainMenu();
-		helpScreen = new HelpScreen();
-		leaderboardFrame = new LeaderboardFrame();
+	    DBConnector.init(); //Seems to be used to connect to a database
+	    mainMenu = new MainMenu();
+	    helpScreen = new HelpScreen();
+	    leaderboardFrame = new LeaderboardFrame();
 	}
 
 	/**
