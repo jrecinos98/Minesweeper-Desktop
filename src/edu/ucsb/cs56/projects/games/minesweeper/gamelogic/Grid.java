@@ -65,6 +65,7 @@ public class Grid implements Serializable{
 		for (int i = 0; i < difficulty.ordinal() * grid.length; i++) {
 			setMine();
 		}
+		//timer shouldnt start until the first tile is tapped.
 		startTimer();
 	}
 
@@ -230,7 +231,7 @@ public class Grid implements Serializable{
 	}
 
 	/**
-	 * Checks a cell to see if there is a grid underneath
+	 * Checks a cell to see if there is a mine underneath
 	 * @param i row of box cell
 	 * @param j column of box cell
 	 * @return a boolean indicating whether the spot is a mine or not
@@ -336,33 +337,33 @@ public class Grid implements Serializable{
 	 * @param row row of box cell
 	 * @param col column of box cell
 	 */
-	public void findAllZeros(int row, int col) { //TODO: throw exception
-		Queue<Integer> bfs = new LinkedList<Integer>();
+    public void findAllZeros(int row, int col) { //TODO: throw exception
+	Queue<Integer> bfs = new LinkedList<Integer>();
+	if (grid[row][col].getSymbol() == '0') {
+	    bfs.add(row * grid.length + col);
+	    while (!bfs.isEmpty()) {
+		row = bfs.peek() / grid.length;
+		col = bfs.poll() % grid.length;
 		if (grid[row][col].getSymbol() == '0') {
-			bfs.add(row * grid.length + col);
-			while (!bfs.isEmpty()) {
-				row = bfs.peek() / grid.length;
-				col = bfs.poll() % grid.length;
-				if (grid[row][col].getSymbol() == '0') {
-					for (int i = row - 1; i <= row + 1; i++) {
-						for (int j = col - 1; j <= col + 1; j++) {
-							if (i >= 0 && i < grid.length && j >= 0 && j < grid.length && !grid[i][j].getIsFlagged() && !grid[i][j].getIsMine() && !grid[i][j].getIsOpen()) {
-								correctMoves++;
-								if (correctMoves >= grid.length * grid.length) {
-									gameState = Constants.GameState.WON;
-									endGame();
-								}
-								if (grid[i][j].getSymbol() == '0') {
-									bfs.add(i * grid.length + j);
-								}
-								grid[i][j].open();
-							}
-						}
-					}
+		    for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+			    if (i >= 0 && i < grid.length && j >= 0 && j < grid.length && !grid[i][j].getIsFlagged() && !grid[i][j].getIsMine() && !grid[i][j].getIsOpen()) {
+				correctMoves++;
+				if (correctMoves >= grid.length * grid.length) {
+				    gameState = Constants.GameState.WON;
+				    endGame();
 				}
+				if (grid[i][j].getSymbol() == '0') {
+				    bfs.add(i * grid.length + j);
+				}
+				grid[i][j].open();
+			    }
 			}
+		    }
 		}
+	    }
 	}
+    }
 
 	/**
 	 * Display where all the mines were after a user lost
