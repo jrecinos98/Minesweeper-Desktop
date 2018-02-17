@@ -1,6 +1,8 @@
+
+
 (a) This project is minesweeper. There are two available options to play the game. We have the GUI version and the command line version of the game. The main objective of the game is to mark all the mines throughout the grid and to uncover all other cells.
 
-(b) As a user I can select the difficulty of the game, load a last game, get help, and  check the leaderboards from the main menu. In the game I can click on a cell to unveil the tile and any other empty tile in its proximity. I can see the timer running and I can also select the help button to get instructions of how to play the game.
+(b) As a user I can select the difficulty of the game, load a last game, get help, and check the leaderboards from the main menu. In the game I can click on a cell to unveil the tile and any other empty tile in its proximity. I can see the timer running and I can also select the help button to get instructions of how to play the game.
 
 (c) The game at this point is fully playable and functions properly. Depending on what game mode we choose we can play through GUI or through terminal by typing in the instructions of what we want to do (row number and column number)
 
