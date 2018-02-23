@@ -5,13 +5,15 @@
 		  updated P. Conrad for github W14-->
 
 	<property environment="env"/>
+	<!--
 	<property name="webRoot" value="${env.HOME}/public_html" />
-	<property name="webBaseURL" value="http://www.cs.ucsb.edu/~${env.USER}" />
+	<property name="webBaseURL" value="http://www.cs.ucsb.edu/~${env.USER}" />-->
+	
 	<property name="project" value="cs56-games-minesweeper" />
-
+<!--
 	<property name="javadocDest" value="${webRoot}/${project}/javadoc" />
 	<property name="javadocURL" value="${webBaseURL}/${project}/javadoc" />
-
+-->
 	<property name="classesDir" value="build/classes"/>
 	<property name="distDir" value="build/dist"/>
 	<property name="libDir" value="lib"/>
@@ -45,11 +47,12 @@
 	</target>
 
 	<target name="javadoc" depends="compile" description="create javadoc">
-		<delete dir="javadoc" quiet="true"/>
-		<javadoc destdir="javadoc" author="true" version="true" use="true" >
+		<delete dir="docs/javadoc" quiet="true"/>
+		<javadoc destdir="docs/javadoc" author="true" version="true" use="true" >
 			<fileset dir="src" includes="**/*.java"/>
 			<classpath refid="compile.path"/>
 		</javadoc>
+		<!--
 		<delete quiet="true" dir="${javadocDest}"/>
 		<copy todir="${javadocDest}">
 			<fileset dir="javadoc"/>
@@ -57,7 +60,7 @@
 		<chmod dir="${javadocDest}" perm="755"  type="dir" includes="**"/>
 		<chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*"/>
 		<echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
-		<echo>or if not on CSIL, try file:///${javadocDest}/index.html</echo>
+		<echo>or if not on CSIL, try file:///${javadocDest}/index.html</echo>-->
 	</target>
 
 	<target name="test" depends="compile" description="runs test classes">
