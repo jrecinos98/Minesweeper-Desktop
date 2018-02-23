@@ -258,8 +258,6 @@ public class GameFrame extends JFrame {
     public void playSound(String dir) {
 	if (dir != null) {
 	    try {
-     
-      
 		File resource = new File("resources" + dir);
 		AudioInputStream audioInputStream;
 		if (resource.exists()) {

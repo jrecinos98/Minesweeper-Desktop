@@ -87,7 +87,15 @@
 			<classpath refid="run.path"/>
 		</java>
 	</target>
-
+	
+	<target name= "jar" depends="compile" description= "outputs project as a jar">
+	  <mkdir dir="${distDir}"/>
+	  <jar destfile="${distDir}/minesweeperProject.jar" basedir="${classesDir}" excludes="**/tests/**">
+	    <zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
+	     <fileset dir="${resourceDir}"/>
+	  </jar>
+	</target>
+<!--
 	<target name="jartext" depends="compile" description="output text game as a jar">
 		<mkdir dir="${distDir}"/>
 		<jar destfile="${distDir}/textMinesweeper.jar" basedir="${classesDir}" excludes="**/*Test*">	       
@@ -107,6 +115,6 @@
 				<attribute name="Main-Class" value="edu.ucsb.cs56.projects.games.minesweeper.gui.${MainClassGui}"/>
 			</manifest>
 		</jar>
-	</target>
+	</target>-->
 
 </project>

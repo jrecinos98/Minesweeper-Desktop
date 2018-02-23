@@ -9,3 +9,4 @@ env.sh
 .idea/
 .project
 .DS_Store
+*.#*
