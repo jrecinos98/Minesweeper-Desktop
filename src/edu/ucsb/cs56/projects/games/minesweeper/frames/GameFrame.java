@@ -23,7 +23,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import sun.audio. *;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -259,24 +258,21 @@ public class GameFrame extends JFrame {
     public void playSound(String dir) {
 	if (dir != null) {
 	    try {
-		String path= "resources"+dir;
-		InputStream in = new FileInputStream(path);
-		AudioStream audioStream= new AudioStream(in);
-		AudioPlayer.player.start(audioStream);
+     
       
-		//File resource = new File("resources" + dir);
-		//AudioInputStream audioInputStream;
-		/*if (resource.exists()) {
+		File resource = new File("resources" + dir);
+		AudioInputStream audioInputStream;
+		if (resource.exists()) {
 		  audioInputStream = AudioSystem.getAudioInputStream(resource.getAbsoluteFile());
 		  } else {
 		  audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(dir));
 		  }
-		  //	Clip clip = AudioSystem.getClip();
-		  //clip.open(audioInputStream);
-		  //	clip.start();*/
+		 	Clip clip = AudioSystem.getClip();
+		  clip.open(audioInputStream);
+		  	clip.start();
 	    }
 	 
-	    catch ( IOException e) {
+	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
 		e.printStackTrace();
 	    }
 	 
