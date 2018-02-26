@@ -44,7 +44,6 @@ First set up your environment variables to connect to your postgrsql database th
 * To run the TextGame, use "ant textmine".
 
 
-![Alt text](/Users/Matt/cs56/ProgProj/cs56-games-minesweeper/screenshots/StartScreen.png?raw=true "Title")
 
 F17 Final Remarks
 =================
