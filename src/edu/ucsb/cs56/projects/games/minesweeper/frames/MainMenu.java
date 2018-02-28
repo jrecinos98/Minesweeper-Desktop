@@ -26,7 +26,7 @@ public class MainMenu extends JFrame {
 	private JButton load; //loads game
 	private JButton help;    //Main Menu Help Button
 	private JButton highScore; // this label status displays the local high score.
-
+	
 	/**
 	 * Default Constructor for main menu
 	 * @throws HeadlessException if no display
@@ -35,7 +35,7 @@ public class MainMenu extends JFrame {
 		super();
 		setSize(650, 600);
 		Container menu = getContentPane();
-		menu.setLayout(new GridLayout(4, 0)); //our 2 section grid layout for our main menu
+		menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
 		quitMine = new JButton("Quit Minesweeper");
 		easyGame = new JButton("New Easy Game");
 		medGame = new JButton("New Medium Game");
