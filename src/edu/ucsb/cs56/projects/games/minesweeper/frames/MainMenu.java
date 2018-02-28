@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Insets;
+
 
 
 
@@ -22,14 +24,10 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 //import java.awt.image.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import javax.imageio.ImageIO;
-/*
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel; //*
-import javax.swing.JLabel;
-import javax.swing.ImageIo;
-*/
+
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
@@ -64,7 +62,10 @@ public class MainMenu extends JFrame {
 
 		panel2 = new JPanel();
 		panel2.setOpaque(false);
-		panel2.setLayout(new FlowLayout());
+		BoxLayout boxLayout= new BoxLayout(panel2, BoxLayout.Y_AXIS);
+		panel2.setLayout(boxLayout);
+		panel2.setBorder(new EmptyBorder(new Insets(200,200,200,200)));
+
 
 		
 
@@ -87,13 +88,13 @@ public class MainMenu extends JFrame {
 		setLocation(200, 200);
 		//Container menu = getContentPane();
 		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
-		quitMine = new JButton("Quit Minesweeper");
+		load = new JButton("Load Last Game");
 		easyGame = new JButton("New Easy Game");
 		medGame = new JButton("New Medium Game");
 		hardGame = new JButton("New Hard Game");
-		help = new JButton("Help");
-		load = new JButton("Load Last Game");
 		highScore = new JButton("Leaderboards");
+		help = new JButton("Help");
+		quitMine = new JButton("Quit Minesweeper");
 
 
 		easyGame.addActionListener((ActionEvent e) -> {
@@ -115,24 +116,24 @@ public class MainMenu extends JFrame {
 		load.addActionListener((ActionEvent e) -> { MineGUI.newGame(Constants.Difficulty.LOAD); });
 		quitMine.addActionListener((ActionEvent e) -> { MineGUI.quitPrompt(); });
 		highScore.addActionListener((ActionEvent e) -> {MineGUI.setLeaderboardVisible(true); });
-		
 
 
 
 
-		panel2.add(quitMine);
+
+		panel2.add(load);
 	
 		panel2.add(easyGame);
 		
 		panel2.add(medGame);
 		
 		panel2.add(hardGame);
-	
-		panel2.add(load);
+
+		panel2.add(highScore);
 	
 		panel2.add(help);
-	
-		panel2.add(highScore);
+
+		panel2.add(quitMine);
 	
 		add(panel2);
 
