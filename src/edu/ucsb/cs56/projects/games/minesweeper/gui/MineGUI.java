@@ -11,6 +11,7 @@ import edu.ucsb.cs56.projects.games.minesweeper.frames.GameFrame;
 import edu.ucsb.cs56.projects.games.minesweeper.frames.HelpScreen;
 import edu.ucsb.cs56.projects.games.minesweeper.frames.LeaderboardFrame;
 import edu.ucsb.cs56.projects.games.minesweeper.frames.MainMenu;
+import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 
 /**
  * MineGUI.java is a base that calls all GUI objects and handles tasks
@@ -110,6 +111,9 @@ public class MineGUI {
 	 */
 	public static boolean overwriteSavePrompt() {
 		JFrame currFrame = getCurrentFrame();
+		if(!Grid.saveExist()){
+		    return true;
+        }
 		int response = JOptionPane.showConfirmDialog(currFrame, "Are you sure you want to do this? This will delete previous save data", "Overwriting Save", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (response == JOptionPane.YES_OPTION) {
 			return true;

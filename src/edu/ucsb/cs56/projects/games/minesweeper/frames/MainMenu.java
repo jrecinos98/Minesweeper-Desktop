@@ -60,6 +60,7 @@ public class MainMenu extends JFrame {
 	public MainMenu() throws HeadlessException {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
+		setResizable(false);
 		//super();
 
 		panel2 = new JPanel();
