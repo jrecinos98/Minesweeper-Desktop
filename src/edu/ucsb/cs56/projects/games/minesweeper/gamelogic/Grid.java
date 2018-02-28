@@ -459,9 +459,7 @@ public class Grid implements Serializable{
 	}
 
 	/**
-	 * Returns true if a saved file exists, false otherwise
-	 * @throws IOException if no save file
-	 * @throws ClassNotFoundException if no save file
+	 * Checks whether a save file exists.
 	 * @return true if save file exists and false otherwise
 	 */
 	public static boolean saveExist(){
