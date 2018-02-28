@@ -1,12 +1,10 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
@@ -14,18 +12,18 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Insets;
-
-
-
-
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-//import java.awt.image.*;
+import java.awt.Dimension;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.Box;
 
+import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
@@ -51,7 +49,11 @@ public class MainMenu extends JFrame {
 	
 	private JPanel panel2;
 	private JLabel lblBackgroundImage = new JLabel();
-	/**
+
+    private Color lowOpGrey = new Color(192,192,192,160);
+    private Color white= new Color(255,255,255);
+
+    /**
 	 * Default Constructor for main menu
 	 * @throws HeadlessException if no display
 	 */
@@ -65,6 +67,7 @@ public class MainMenu extends JFrame {
 		BoxLayout boxLayout= new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		panel2.setLayout(boxLayout);
 		panel2.setBorder(new EmptyBorder(new Insets(200,200,200,200)));
+
 
 
 		
@@ -86,15 +89,30 @@ public class MainMenu extends JFrame {
 		
 		setVisible(true);
 		setLocation(200, 200);
+
 		//Container menu = getContentPane();
 		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
 		load = new JButton("Load Last Game");
+        load.setBackground(lowOpGrey);
+        // load.setForeground(white);
+
 		easyGame = new JButton("New Easy Game");
+		easyGame.setBackground(lowOpGrey);
+
 		medGame = new JButton("New Medium Game");
+		medGame.setBackground(lowOpGrey);
+
 		hardGame = new JButton("New Hard Game");
+		hardGame.setBackground(lowOpGrey);
+
 		highScore = new JButton("Leaderboards");
+		highScore.setBackground(lowOpGrey);
+
 		help = new JButton("Help");
+		help.setBackground(lowOpGrey);
+
 		quitMine = new JButton("Quit Minesweeper");
+		quitMine.setBackground(lowOpGrey);
 
 
 		easyGame.addActionListener((ActionEvent e) -> {
@@ -121,17 +139,29 @@ public class MainMenu extends JFrame {
 
 
 
-		panel2.add(load);
-	
-		panel2.add(easyGame);
-		
-		panel2.add(medGame);
-		
-		panel2.add(hardGame);
+        panel2.add(easyGame);
+
+		panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(medGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(hardGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(load);
+
+        panel2.add(Box.createVerticalStrut(15));
 
 		panel2.add(highScore);
-	
+
+        panel2.add(Box.createVerticalStrut(15));
+
 		panel2.add(help);
+
+        panel2.add(Box.createVerticalStrut(15));
 
 		panel2.add(quitMine);
 	
@@ -162,7 +192,7 @@ public class MainMenu extends JFrame {
 		menu.add(highScore); // add new highScore feature to frame.
 		*/
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 
