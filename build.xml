@@ -1,25 +1,12 @@
 <project default="compile">
 
-	<!-- build.xml for github.com/UCSB-CS56-Projects/cs56-games-minesweeper
-		  original author: Daniel Reta S12
-		  updated P. Conrad for github W14-->
-
 	<property environment="env"/>
-	<!--
-	<property name="webRoot" value="${env.HOME}/public_html" />
-	<property name="webBaseURL" value="http://www.cs.ucsb.edu/~${env.USER}" />-->
-	
 	<property name="project" value="cs56-games-minesweeper" />
-<!--
-	<property name="javadocDest" value="${webRoot}/${project}/javadoc" />
-	<property name="javadocURL" value="${webBaseURL}/${project}/javadoc" />
--->
 	<property name="classesDir" value="build/classes"/>
 	<property name="distDir" value="build/dist"/>
 	<property name= "jarDir" value="${classesDir}/edu/ucsb/cs56/projects/games"/>
 	<property name="libDir" value="lib"/>
 	<property name="resourceDir" value="resources"/>
-
 	<property name="MainClassText" value="TextGame" />
 	<property name="MainClassGui" value="MineGUI" />
 
@@ -53,15 +40,6 @@
 			<fileset dir="src" includes="**/*.java"/>
 			<classpath refid="compile.path"/>
 		</javadoc>
-		<!--
-		<delete quiet="true" dir="${javadocDest}"/>
-		<copy todir="${javadocDest}">
-			<fileset dir="javadoc"/>
-		</copy>
-		<chmod dir="${javadocDest}" perm="755"  type="dir" includes="**"/>
-		<chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*"/>
-		<echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
-		<echo>or if not on CSIL, try file:///${javadocDest}/index.html</echo>-->
 	</target>
 
 	<target name="test" depends="compile" description="runs test classes">
@@ -96,26 +74,5 @@
 	     <fileset dir="${resourceDir}"/>
 	  </jar>
 	</target>
-<!--
-	<target name="jartext" depends="compile" description="output text game as a jar">
-		<mkdir dir="${distDir}"/>
-		<jar destfile="${distDir}/textMinesweeper.jar" basedir="${classesDir}" excludes="**/*Test*">	       
-			<zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
-			<manifest>
-				<attribute name="Main-Class" value="edu.ucsb.cs56.projects.games.minesweeper.text.${MainClassText}"/>
-			</manifest>
-		</jar>
-	</target>
-
-	<target name="jargui" depends="compile" description="output text game as a jar">
-		<mkdir dir="${distDir}"/>
-		<jar destfile="${distDir}/guiMinesweeper.jar" basedir="${classesDir}" excludes="**/*Test*">
-			<zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
-			<fileset dir="${resourceDir}"/>
-			<manifest>
-				<attribute name="Main-Class" value="edu.ucsb.cs56.projects.games.minesweeper.gui.${MainClassGui}"/>
-			</manifest>
-		</jar>
-	</target>-->
 
 </project>
