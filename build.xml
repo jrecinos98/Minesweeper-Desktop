@@ -16,6 +16,7 @@
 -->
 	<property name="classesDir" value="build/classes"/>
 	<property name="distDir" value="build/dist"/>
+	<property name= "jarDir" value="${classesDir}/edu/ucsb/cs56/projects/games"/>
 	<property name="libDir" value="lib"/>
 	<property name="resourceDir" value="resources"/>
 
@@ -90,7 +91,7 @@
 	
 	<target name= "jar" depends="compile" description= "outputs project as a jar">
 	  <mkdir dir="${distDir}"/>
-	  <jar destfile="${distDir}/minesweeperProject.jar" basedir="${classesDir}" excludes="**/tests/**">
+	  <jar destfile="${distDir}/Minesweeper.jar" basedir="${jarDir}" excludes="**/tests/**" update="no" filesonly="yes">
 	    <zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
 	     <fileset dir="${resourceDir}"/>
 	  </jar>
