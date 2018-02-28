@@ -459,6 +459,21 @@ public class Grid implements Serializable{
 	}
 
 	/**
+	 * Returns true if a saved file exists, false otherwise
+	 * @throws IOException if no save file
+	 * @throws ClassNotFoundException if no save file
+	 * @return true if save file exists and false otherwise
+	 */
+	public static boolean saveExist(){
+
+	    if (new File("MyGame.ser").isFile()){
+            return true;
+        }
+	    return false;
+
+	}
+
+	/**
 	 * Saves the current game (this) into a serialized file
 	 */
 	public void save() {

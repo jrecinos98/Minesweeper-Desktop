@@ -55,6 +55,8 @@ public class GameFrame extends JFrame {
     private JButton flagBtn;
     private JPanel grid;
 
+	private Color Grey = new Color(180,180,180);
+
     /**
      * Constructs game from the given difficulty
      * @param difficulty difficulty of the game to be played
@@ -79,6 +81,7 @@ public class GameFrame extends JFrame {
 	for (int i = 0; i < game.getSize(); i++) {
 	    for (int j = 0; j < game.getSize(); j++) {
 		buttons[i][j] = new JButton();
+		buttons[i][j].setBackground(Grey);
 		buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
 		buttons[i][j].setIcon(null);

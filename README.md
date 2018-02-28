@@ -43,6 +43,7 @@ First set up your environment variables to connect to your postgrsql database th
 * To run the GuiGame, use "ant mine".
 * To run the TextGame, use "ant textmine".
 
+![Alt Text](https://media.giphy.com/media/5z24YknBcpkmlNqyEk/giphy.gif)
 
 
 F17 Final Remarks
