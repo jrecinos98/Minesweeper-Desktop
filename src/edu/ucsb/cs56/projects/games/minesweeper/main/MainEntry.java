@@ -11,7 +11,7 @@ import edu.ucsb.cs56.projects.games.minesweeper.text.TextGame;
  */
 public class MainEntry{
     /**
-     * Takes an option from command line argument and executes the specified version of the game.
+     * Takes a game mode from command line argument and executes the specified version of the game.
      * @param args. Two valid options: GUI or Text.
      */
     public static void main(String[] args){
