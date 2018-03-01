@@ -73,7 +73,7 @@ public class MainMenu extends JFrame {
 
 
 		ImageIcon icon = new ImageIcon();
-		icon = getBackgroundImage("/images/MINESWEEPERMenuScreen.png");
+		icon = getBackgroundImage("/images/background.png");
 		lblBackgroundImage.setLayout(new FlowLayout());
 		lblBackgroundImage.setIcon(icon);
 
