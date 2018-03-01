@@ -4,9 +4,9 @@
 	<property name="project" value="cs56-games-minesweeper" />
 	<property name="classesDir" value="build/classes"/>
 	<property name="distDir" value="build/dist"/>
-	<property name= "jarDir" value="${classesDir}/edu/ucsb/cs56/projects/games"/>
 	<property name="libDir" value="lib"/>
 	<property name="resourceDir" value="resources"/>
+	<property name= "JarMainEntry" value="MainEntry"/>
 	<property name="MainClassText" value="TextGame" />
 	<property name="MainClassGui" value="MineGUI" />
 
@@ -69,9 +69,12 @@
 	
 	<target name= "jar" depends="compile" description= "outputs project as a jar">
 	  <mkdir dir="${distDir}"/>
-	  <jar destfile="${distDir}/Minesweeper.jar" basedir="${jarDir}" excludes="**/tests/**" update="no" filesonly="yes">
-	    <zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
-	     <fileset dir="${resourceDir}"/>
+	  <jar destfile="${distDir}/Minesweeper.jar" basedir="${classesDir}" excludes="**/tests/**" update="no" filesonly="yes">
+          <manifest>
+              <attribute name="Main-Class" value="edu.ucsb.cs56.projects.games.minesweeper.main.${JarMainEntry}"/>
+          </manifest>
+          <zipgroupfileset dir="${libDir}" includes="*.jar" excludes="junit*.jar"/>
+	    <fileset dir="${resourceDir}"/>
 	  </jar>
 	</target>
 

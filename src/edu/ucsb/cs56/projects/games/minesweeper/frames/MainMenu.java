@@ -71,15 +71,11 @@ public class MainMenu extends JFrame {
 
 
 
-		
 
-
-		ImageIcon imageIcon = new ImageIcon("screenshots/MINESWEEPERMenuScreen.png"); // load the image to a imageIcon
-		Image image = imageIcon.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(1000, 800,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		imageIcon = new ImageIcon(newimg); 
+		ImageIcon icon = new ImageIcon();
+		icon = getBackgroundImage("/images/MINESWEEPERMenuScreen.png");
 		lblBackgroundImage.setLayout(new FlowLayout());
-		lblBackgroundImage.setIcon(imageIcon);
+		lblBackgroundImage.setIcon(icon);
 
 
 
@@ -212,7 +208,18 @@ public class MainMenu extends JFrame {
 */
 
 
-
+    private ImageIcon getBackgroundImage(String dir){
+        File local = new File("resources"+dir);
+        ImageIcon icon;
+        if (!local.exists()) {
+            icon = new ImageIcon(getClass().getResource(dir));
+        } else {
+            icon = new ImageIcon(local.getPath());
+        }
+        Image img = icon.getImage();
+        Image newimg = img.getScaledInstance(1000, 800,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        return new ImageIcon(newimg);
+    }
 	public int getEasyGameX() {
 		return easyGame.getX();
 	}
