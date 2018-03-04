@@ -6,8 +6,6 @@ import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Test class for Grid
@@ -37,6 +35,8 @@ public class GridTest {
 		}
 		assertEquals(true, correct);
 	}
+
+    //TestLoadGame
 
 	/**
 	 * Test case default constructor of the Grid class
@@ -110,6 +110,7 @@ public class GridTest {
 	 * Test case for isOpen method of the Grid class
 	 * @see Grid#isOpen(int, int)
 	 */
+	//Test for exception
 	@Test
 	public void test_isOpen2() {
 		Grid g1 = new Grid();
@@ -182,4 +183,8 @@ public class GridTest {
 		Grid g1 = new Grid();
 		assertEquals(Constants.GameState.PLAYING, g1.getGameState());
 	}
+
+    /**
+     * Test that e
+     */
 }
