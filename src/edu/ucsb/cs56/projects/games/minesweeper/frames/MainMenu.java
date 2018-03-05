@@ -27,6 +27,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+
+import java.awt.event.*;
+
+
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
 
@@ -61,6 +72,7 @@ public class MainMenu extends JFrame {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
 		setResizable(false);
+		music();
 		//super();
 
 		panel2 = new JPanel();
@@ -71,13 +83,10 @@ public class MainMenu extends JFrame {
 
 
 
-
 		ImageIcon icon = new ImageIcon();
 		icon = getBackgroundImage("/images/background.png");
 		lblBackgroundImage.setLayout(new FlowLayout());
 		lblBackgroundImage.setIcon(icon);
-
-
 
 
 
@@ -168,44 +177,62 @@ public class MainMenu extends JFrame {
 
 		add(lblBackgroundImage);
 
-		//menu.add(panel);
-
-		//ImageIcon icon= new ImageIcon("screenshots/MINESWEEPERMenuScreen.png");
-		//JLabel backgroundPhoto= new JLabel();
-		//backgroundPhoto.setIcon(icon);
-
-		
-		//JLabel contentPane = new JLabel();
-		//contentPane.setIcon(new ImageIo("screenshots/MINESWEEPERMenuScreen.png"));
-		//contentPane.setLayout(new BorderLayout());
-		//menu.setContentPane(contentPane);
-/*
-		menu.add(easyGame);
-		menu.add(medGame);
-		menu.add(hardGame);
-		menu.add(load);
-		menu.add(help);
-		menu.add(quitMine);
-		menu.add(highScore); // add new highScore feature to frame.
-		*/
+	
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 
-/*
-	private Image getScaledImage(Image srcImg, int w, int h){
-    	BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-    	Graphics2D g2 = resizedImg.createGraphics();
 
-    	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    	g2.drawImage(srcImg, 0, 0, w, h, null);
-    	g2.dispose();
 
-    	return resizedImg;
+ /*
+		AudioPlayer MGP = AudioPlayer.player;
+		AudioStream BGM;
+		AudioData MD;
+
+		ContinuousAudioDataStream loop = null;
+
+		try{
+			InputStream test = new FileInputStream("/sounds/BackgroundMusic.wav");
+			BGM = new AudioStream(test);
+			AudioPlayer.player.start(BGM);
+			MD = BGM.getData();
+			loop = new ContinuousAudioDataStream(MD);
+		}
+		catch(FileNotFoundException e){
+			System.out.print(e.toString());
+		}
+	*/
+	
+
+	public void playSound(String dir) {
+	if (dir != null) {
+	    try {
+		File resource = new File("resources" + dir);
+		AudioInputStream audioInputStream;
+		if (resource.exists()) {
+		  audioInputStream = AudioSystem.getAudioInputStream(resource.getAbsoluteFile());
+		  } else {
+		  audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(dir));
+		  }
+		  Clip clip = AudioSystem.getClip();
+		  clip.open(audioInputStream);
+		  clip.loop(Clip.LOOP_CONTINUOUSLY);
+	    }
+	 
+	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
+		e.printStackTrace();
+	    }
+	 
 	}
+    }
+  public void music(){
+    	String musicName = "/sounds/BackgroundMusic.wav";
+    	//if(game.getApplicationState() == Constants.ApplicationState.MAINMENU){
+    	playSound(musicName);
+    	//}
 
-*/
+}
 
 
     private ImageIcon getBackgroundImage(String dir){
@@ -263,5 +290,6 @@ public class MainMenu extends JFrame {
 	public int getLeaderBoardX() { return highScore.getX(); }
 
 	public int getLeaderBoardY() { return highScore.getY(); }
+
 
 }

@@ -258,6 +258,8 @@ public class GameFrame extends JFrame {
      * plays a sound from the resources
      * @param dir name of the sound file to be played
      */
+   
+    
     public void playSound(String dir) {
 	if (dir != null) {
 	    try {
@@ -279,6 +281,7 @@ public class GameFrame extends JFrame {
 	 
 	}
     }
+
 
     public ImageIcon getImageIcon(String resource) {
 	File local = new File("resources/" + resource);
@@ -469,4 +472,5 @@ public class GameFrame extends JFrame {
 	    }
 	}
     } // class ButtonListener
+
 }
