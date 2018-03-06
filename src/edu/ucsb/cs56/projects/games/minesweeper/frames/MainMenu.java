@@ -1,22 +1,15 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
 import java.awt.FlowLayout;
 import java.awt.Insets;
-import java.awt.Container;
-import java.awt.GridLayout;
+
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.awt.Dimension;
+
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,7 +17,6 @@ import javax.swing.Box;
 
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 
 
@@ -72,8 +64,7 @@ public class MainMenu extends JFrame {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
 		setResizable(false);
-		music();
-		//super();
+
 
 		panel2 = new JPanel();
 		panel2.setOpaque(false);
@@ -95,6 +86,7 @@ public class MainMenu extends JFrame {
 		
 		setVisible(true);
 		setLocation(200, 200);
+        music();
 
 		//Container menu = getContentPane();
 		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
@@ -184,27 +176,6 @@ public class MainMenu extends JFrame {
 
 
 
-
- /*
-		AudioPlayer MGP = AudioPlayer.player;
-		AudioStream BGM;
-		AudioData MD;
-
-		ContinuousAudioDataStream loop = null;
-
-		try{
-			InputStream test = new FileInputStream("/sounds/BackgroundMusic.wav");
-			BGM = new AudioStream(test);
-			AudioPlayer.player.start(BGM);
-			MD = BGM.getData();
-			loop = new ContinuousAudioDataStream(MD);
-		}
-		catch(FileNotFoundException e){
-			System.out.print(e.toString());
-		}
-	*/
-	
-
 	public void playSound(String dir) {
 	if (dir != null) {
 	    try {
@@ -227,10 +198,8 @@ public class MainMenu extends JFrame {
 	}
     }
   public void music(){
-    	String musicName = "/sounds/BackgroundMusic.wav";
-    	//if(game.getApplicationState() == Constants.ApplicationState.MAINMENU){
+    	String musicName = "/sounds/BackgroundMusic.au";
     	playSound(musicName);
-    	//}
 
 }
 
