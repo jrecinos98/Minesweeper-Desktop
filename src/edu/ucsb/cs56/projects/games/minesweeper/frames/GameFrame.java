@@ -18,11 +18,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -270,9 +266,19 @@ public class GameFrame extends JFrame {
 		  } else {
 		  audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(dir));
 		  }
-		 	Clip clip = AudioSystem.getClip();
-		  clip.open(audioInputStream);
-		  	clip.start();
+		  AudioFormat format = audioInputStream.getFormat();
+          DataLine.Info info= new DataLine.Info(Clip.class,format);
+          Clip clip = (Clip) AudioSystem.getLine(info);
+          clip.flush();
+          clip.addLineListener(e -> {
+              if (e.getType() == LineEvent.Type.STOP) {
+                  clip.close();
+              }
+          });
+          clip.open(audioInputStream);
+          clip.start();
+          audioInputStream.close();
+
 	    }
 	 
 	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
