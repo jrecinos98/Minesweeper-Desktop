@@ -21,3 +21,4 @@ https://github.com/ucsb-cs56-projects/cs56-games-minesweeper/issues/76
 (i) All the classes and file names refelect what their purpose is. There are no ambiguous variable names.It seems clear how all the classes work with one another. Overall the code is well structured and documented. All the frames are arranged in a separate directory for example. If were to give this project to someone else we would recommend for them to look through the subdirectories in src. The way they are organized and separated from one another makes it easy to get up to speed on what each file does and how it all work. Also i would reccomend reading through the README.md file as it contains detailed info about the project.
 
 (j) There are plenty of JUnitTests. There are tests that verify that the grid is created correctly and test the GUI of the application. The command line game mode lacks any JUnit tests and these can be implemented.
+
