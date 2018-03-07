@@ -19,13 +19,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.sound.sampled.*;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.database.DBConnector;
@@ -78,6 +73,7 @@ public class GameFrame extends JFrame {
 	    for (int j = 0; j < game.getSize(); j++) {
 		buttons[i][j] = new JButton();
 		buttons[i][j].setBackground(Grey);
+
 		buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
 		buttons[i][j].setIcon(null);
@@ -299,7 +295,7 @@ public class GameFrame extends JFrame {
 	}
 	Image img = icon.getImage();
 	//resize icon to fit button
-	Image newImg = img.getScaledInstance(grid.getWidth() / game.getSize() - 10, grid.getHeight() / game.getSize() - 10,  java.awt.Image.SCALE_DEFAULT) ;
+	Image newImg = img.getScaledInstance(grid.getWidth() / game.getSize(), grid.getHeight() / game.getSize(),  Image.SCALE_SMOOTH) ;
 	return new ImageIcon(newImg);
     }
 
@@ -322,7 +318,8 @@ public class GameFrame extends JFrame {
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
 		if (game.isOpen(i, j)) {
 		    if (game.isMine(i, j)) {
-			buttons[i][j].setIcon(theMine); //getImageIcon("/images/mine.jpg")
+
+			buttons[i][j].setIcon(theMine);
 		    } else {
 			if (game.getCell(i, j) == '0') {
 			    buttons[i][j].setForeground(ZERO);
