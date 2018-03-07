@@ -45,12 +45,7 @@ public class MainMenu extends JFrame {
 	private JButton load; //loads game
 	private JButton help;    //Main Menu Help Button
 	private JButton highScore; // this label status displays the local high score.
-	
-	private JPanel panel2;
-	private JLabel lblBackgroundImage = new JLabel();
-
     private Color lowOpGrey = new Color(192,192,192,160);
-    private Color white= new Color(255,255,255);
 
     /**
 	 * Default Constructor for main menu
@@ -61,7 +56,7 @@ public class MainMenu extends JFrame {
 		setSize(1000, 800);
 		setResizable(false);
 
-		panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
 		panel2.setOpaque(false);
 		BoxLayout boxLayout= new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		panel2.setLayout(boxLayout);
@@ -69,25 +64,19 @@ public class MainMenu extends JFrame {
 
 
 
-		ImageIcon icon = new ImageIcon();
-		icon = getBackgroundImage("/images/background.png");
-		lblBackgroundImage.setLayout(new FlowLayout());
+		ImageIcon icon = getBackgroundImage("/images/background.png");
+        JLabel lblBackgroundImage = new JLabel();
+        lblBackgroundImage.setLayout(new FlowLayout());
 		lblBackgroundImage.setIcon(icon);
+        playSound("/sounds/BackgroundMusic.au");
 
 
 
 
-		//add(new ContentPanel());
-		
-		setVisible(true);
-		setLocation(200, 200);
-        music();
 
-		//Container menu = getContentPane();
-		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
 		load = new JButton("Load Last Game");
         load.setBackground(lowOpGrey);
-        // load.setForeground(white);
+
 
 		easyGame = new JButton("New Easy Game");
 		easyGame.setBackground(lowOpGrey);
@@ -205,9 +194,7 @@ public class MainMenu extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-
-
-	public void playSound(String dir) {
+	private void playSound(String dir) {
 	if (dir != null) {
 	    try {
 		File resource = new File("resources" + dir);
@@ -229,14 +216,8 @@ public class MainMenu extends JFrame {
 		e.printStackTrace();
 	    }
 	 
-	}
+	    }
     }
-  public void music(){
-    	String musicName = "/sounds/BackgroundMusic.au";
-    	playSound(musicName);
-
-}
-
 
     private ImageIcon getBackgroundImage(String dir){
         File local = new File("resources"+dir);
