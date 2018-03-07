@@ -50,7 +50,7 @@ public class GameFrame extends JFrame {
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
-
+    
 	private Color Grey = new Color(180,180,180);
 
     /**
@@ -306,7 +306,13 @@ public class GameFrame extends JFrame {
     /**
      * Refreshed the grid to coincide with the game
      */
+
+
+
+
+
     public void refresh() {
+    ImageIcon theMine = getImageIcon("/images/mine.jpg");
 	int fontSize = buttons[0][0].getSize().height / 2;
 	if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
 	    fontSize = buttons[0][0].getSize().width / 4;
@@ -316,7 +322,7 @@ public class GameFrame extends JFrame {
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
 		if (game.isOpen(i, j)) {
 		    if (game.isMine(i, j)) {
-			buttons[i][j].setIcon(getImageIcon("/images/mine.jpg"));
+			buttons[i][j].setIcon(theMine); //getImageIcon("/images/mine.jpg")
 		    } else {
 			if (game.getCell(i, j) == '0') {
 			    buttons[i][j].setForeground(ZERO);
@@ -401,6 +407,11 @@ public class GameFrame extends JFrame {
 	 * Places player's symbol on button, checks for a winner or tie
 	 * @param event when a button is clicked
 	 */
+
+	
+	
+
+
 	public void mouseReleased(MouseEvent event) {
 	    String soundName = null;
 	    if (game.getGameState() == Constants.GameState.PLAYING) {
