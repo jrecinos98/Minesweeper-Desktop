@@ -17,8 +17,8 @@ public class MainEntry{
     //A jar can only have one Main-Class in its MANIFEST file. Which means only one version of the game can be executed when the jar is executed.
     //To remedy this we have a main function that determines based on GAMEMODE passed which main function to run.
     public static void main(String[] args){
-        String usage="Usage: java -jar Minesweeper.java [GAMEMODE]" +
-                "\nGAMEMODE:" +
+        String usage="Usage: java -jar Minesweeper.java [GAME MODE]" +
+                "\nGAME MODE:" +
                 "\n     GUI : Executes GUI version of the game" +
                 "\n     Text : Executes the terminal version of the game.";
         if (args.length==0){
