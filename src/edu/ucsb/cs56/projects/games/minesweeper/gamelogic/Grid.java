@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
@@ -29,8 +26,8 @@ import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
  *
  * @author Ryan Wiener
  */
-public class Grid implements Serializable{
 
+public class Grid implements Serializable{
 	private int gameTime;
 	private transient Timer timer;
 	private GridComponent[][] grid;
@@ -54,7 +51,7 @@ public class Grid implements Serializable{
 		this.difficulty = difficulty;
 		correctMoves = 0;
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
-		setZero();
+		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
 			grid[3][3].makeMine();
 			for (int i = 2; i <= 3; i++) {
@@ -63,9 +60,9 @@ public class Grid implements Serializable{
 				}
 			}
 		}
-		for (int i = 0; i < difficulty.ordinal() * grid.length; i++) {
+		/*for (int i = 0; i < difficulty.ordinal() * grid.length; i++) {
 			setMine();
-		}
+		}*/
 		//timer shouldnt start until the first tile is tapped.
 		startTimer();
 	}
@@ -129,17 +126,57 @@ public class Grid implements Serializable{
 	/**
 	 * Sets all cells in the grid to zero.
 	 */
-	public void setZero() {
+	public void setCells() {
+        Random random = new Random();
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				grid[i][j] = new GridComponent();
 			}
 		}
+		int bombs=difficulty.ordinal() * grid.length;
+		while (bombs > 0){
+		    int x = random.nextInt(grid.length);
+		    int y = random.nextInt(grid.length);
+		    if (!grid[x][y].getIsMine()){
+		        grid[x][y].makeMine();
+            }
+            bombs--;
+		    bombCounter(grid,x,y);
+        }
 	}
+    private void bombCounter(GridComponent[][] cells, final int width, final int height){
+        //if bomb is not in a corner or edge the default values defined below will be used.
+        int xStart=width-1;
+        int xEnd=width+1;
+        int yStart=height-1;
+        int yEnd=height+1;
+        //if the bomb is on the left edge.
+        if (xStart <0){
+            xStart=width;
+        }
+        //if the bomb is in the right edge.
+        else if(xEnd > cells.length-1){
+            xEnd=width;
+        }
+        //if the bomb is in the top edge.
+        if (yStart < 0){
+            yStart=height;
+        }
+        //if the bomb is in the bottom edge.
+        else if(yEnd > cells[width].length-1){
+            yEnd=height;
+        }
+        for(int k=xStart; k<=xEnd; k++){
+            for(int n=yStart; n<=yEnd; n++){
+                cells[k][n].iterate();
+            }
+        }
 
+    }
+/*
 	/**
 	 * Finds a random Empty cell and makes it a Mine
-	 */
+	 *
 	public void setMine() {
 		int spotX = (int) (grid.length * grid.length * Math.random());
 		int a = spotX / grid.length;
@@ -156,7 +193,7 @@ public class Grid implements Serializable{
 			setMine();
 		}
 	}
-
+*/
 	/**
 	 * Prints out the game
 	 * Used for the text game

@@ -16,6 +16,8 @@ import static org.junit.Assert.assertEquals;
 
 public class GridTest {
 
+	//Test is mine Exception.
+
 	/**
 	 * Test case for setZero method of the Grid class
 	 * @see Grid#setZero()
@@ -24,7 +26,7 @@ public class GridTest {
 	public void test_setZero() {
 		boolean correct = true;
 		Grid test = new Grid();
-		test.setZero();
+		test.setCells();
 		int s = test.getSize();
 		for (int i = 0; i < s; i++) {
 			for (int j = 0; j < s; j++) {
