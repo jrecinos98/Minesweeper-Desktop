@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
+import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 
 /**
  * The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
@@ -496,5 +497,5 @@ public class Grid implements Serializable{
 		public void run(){
 			gameTime++;
 		}
-	} // class Clock
+	}
 }

@@ -39,15 +39,13 @@ public class MainMenu extends JFrame {
 	private JButton easyGame;
 	private JButton medGame;
 	private JButton hardGame;
+	private JButton hardcoreGame;
+	private JButton extremeGame;
+	private JButton legendaryGame;
 	private JButton load; //loads game
 	private JButton help;    //Main Menu Help Button
 	private JButton highScore; // this label status displays the local high score.
-	
-	private JPanel panel2;
-	private JLabel lblBackgroundImage = new JLabel();
-
     private Color lowOpGrey = new Color(192,192,192,160);
-    private Color white= new Color(255,255,255);
 
     /**
 	 * Default Constructor for main menu
@@ -58,8 +56,7 @@ public class MainMenu extends JFrame {
 		setSize(1000, 800);
 		setResizable(false);
 
-
-		panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
 		panel2.setOpaque(false);
 		BoxLayout boxLayout= new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		panel2.setLayout(boxLayout);
@@ -67,25 +64,19 @@ public class MainMenu extends JFrame {
 
 
 
-		ImageIcon icon = new ImageIcon();
-		icon = getBackgroundImage("/images/background.png");
-		lblBackgroundImage.setLayout(new FlowLayout());
+		ImageIcon icon = getBackgroundImage("/images/background.png");
+        JLabel lblBackgroundImage = new JLabel();
+        lblBackgroundImage.setLayout(new FlowLayout());
 		lblBackgroundImage.setIcon(icon);
+        playSound("/sounds/BackgroundMusic.au");
 
 
 
 
-		//add(new ContentPanel());
-		
-		setVisible(true);
-		setLocation(200, 200);
-        music();
 
-		//Container menu = getContentPane();
-		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
 		load = new JButton("Load Last Game");
         load.setBackground(lowOpGrey);
-        // load.setForeground(white);
+
 
 		easyGame = new JButton("New Easy Game");
 		easyGame.setBackground(lowOpGrey);
@@ -95,6 +86,15 @@ public class MainMenu extends JFrame {
 
 		hardGame = new JButton("New Hard Game");
 		hardGame.setBackground(lowOpGrey);
+
+		hardcoreGame = new JButton("New Hardcore Game");
+		hardcoreGame.setBackground(lowOpGrey);
+
+		extremeGame = new JButton("New Extreme Game");
+		extremeGame.setBackground(lowOpGrey);
+
+		legendaryGame = new JButton("New Legendary Game");
+		legendaryGame.setBackground(lowOpGrey);
 
 		highScore = new JButton("Leaderboards");
 		highScore.setBackground(lowOpGrey);
@@ -121,6 +121,21 @@ public class MainMenu extends JFrame {
 				MineGUI.newGame(Constants.Difficulty.HARD);
 			}
 		});
+		hardcoreGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.HARDCORE);
+			}
+		});
+		extremeGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.EXTREME);
+			}
+		});
+		legendaryGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.LEGENDARY);
+			}
+		});
 		help.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
 		load.addActionListener((ActionEvent e) -> { MineGUI.newGame(Constants.Difficulty.LOAD); });
 		quitMine.addActionListener((ActionEvent e) -> { MineGUI.quitPrompt(); });
@@ -139,6 +154,18 @@ public class MainMenu extends JFrame {
         panel2.add(Box.createVerticalStrut(15));
 
         panel2.add(hardGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(hardcoreGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(extremeGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(legendaryGame);
 
         panel2.add(Box.createVerticalStrut(15));
 
@@ -162,14 +189,12 @@ public class MainMenu extends JFrame {
 
 		add(lblBackgroundImage);
 
-	
+        MineGUI.centerWindow(this);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-
-
-	public void playSound(String dir) {
+	private void playSound(String dir) {
 	if (dir != null) {
 	    try {
 		File resource = new File("resources" + dir);
@@ -191,14 +216,8 @@ public class MainMenu extends JFrame {
 		e.printStackTrace();
 	    }
 	 
-	}
+	    }
     }
-  public void music(){
-    	String musicName = "/sounds/BackgroundMusic.au";
-    	playSound(musicName);
-
-}
-
 
     private ImageIcon getBackgroundImage(String dir){
         File local = new File("resources"+dir);
@@ -212,6 +231,7 @@ public class MainMenu extends JFrame {
         Image newimg = img.getScaledInstance(1000, 800,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
+
 	public int getEasyGameX() {
 		return easyGame.getX();
 	}
@@ -235,6 +255,32 @@ public class MainMenu extends JFrame {
 	public int getHardGameY() {
 		return hardGame.getY();
 	}
+
+	public int getHardcoreGameX() {
+		return hardcoreGame.getX();
+	}
+
+	public int getHardcoreGameY() {
+		return hardcoreGame.getY();
+	}
+
+	public int getExtremeGameX() {
+		return extremeGame.getX();
+	}
+
+	public int getExtremeGameY() {
+		return extremeGame.getY();
+	}
+
+	public int getLegendaryGameX() {
+		return legendaryGame.getX();
+	}
+
+	public int getLegendaryGameY() {
+		return legendaryGame.getY();
+	}
+
+
 
 	public int getLoadGameX() {
 		return load.getX();
