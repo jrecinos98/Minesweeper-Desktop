@@ -1,16 +1,12 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Image;
+import java.awt.geom.Point2D;
 import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +41,7 @@ public class GameFrame extends JFrame {
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
+    private static Dimension windowSize;
     
 	private Color Grey = new Color(180,180,180);
 
@@ -55,39 +52,52 @@ public class GameFrame extends JFrame {
      * @throws ClassNotFoundException if loading fails
      */
     public GameFrame(Constants.Difficulty difficulty) throws IOException, ClassNotFoundException {
-	//super(); // is this line necessary?  what does it do?
-	setSize(650, 600);
+        Constants.Difficulty gameDifficulty = difficulty;
+        if (gameDifficulty == Constants.Difficulty.LOAD) {
+            game = Grid.loadGame();
+            gameDifficulty = game.getDifficulty();
+        }
+        setWindowSize(this, gameDifficulty);
         MineGUI.centerWindow(this);
-	//Loads the game from a file if there is any.
-	if (difficulty == Constants.Difficulty.LOAD) {
-	    game = Grid.loadGame();
-	} else {
-	    game = new Grid(difficulty);  // the Interface game
-	}
-	JToolBar toolbar = new JToolBar("In-game toolbar");
-	createToolbar(toolbar);//Function declared below
-	getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
-	grid = new JPanel(); //Declared at the top. Not of type Grid so this is allowed.
-	grid.setLayout(new GridLayout(game.getSize() ,0)); // GridLayout(int rows, int columns)
-	buttons = new JButton[game.getSize()][game.getSize()];//Array of buttons
-	for (int i = 0; i < game.getSize(); i++) {
-	    for (int j = 0; j < game.getSize(); j++) {
-		buttons[i][j] = new JButton();
-		buttons[i][j].setBackground(Grey);
+        if (game == null) {
+            game = new Grid(gameDifficulty);
+        }
+        JToolBar toolbar = new JToolBar("In-game toolbar");
+        createToolbar(toolbar);//Function declared below
+        getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
+        grid = new JPanel(); //Declared at the top. Not of type Grid so this is allowed.
+        grid.setLayout(new GridLayout(game.getSize() ,0)); // GridLayout(int rows, int columns)
+        buttons = new JButton[game.getSize()][game.getSize()];//Array of buttons
+        for (int i = 0; i < game.getSize(); i++) {
+            for (int j = 0; j < game.getSize(); j++) {
+            buttons[i][j] = new JButton();
+            buttons[i][j].setBackground(Grey);
+            buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
+            buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
+            buttons[i][j].setIcon(null);
+            grid.add(buttons[i][j]);
+            }
+        }
+        if (gameDifficulty == Constants.Difficulty.LOAD) {
+            refresh();
+        }
+        getContentPane().add(grid);
+        getContentPane().addComponentListener(new SizeListener());
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
 
-		buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
-		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
-		buttons[i][j].setIcon(null);
-		grid.add(buttons[i][j]);
-	    }
-	}
-	if (difficulty == Constants.Difficulty.LOAD) {
-	    refresh();
-	}
-	getContentPane().add(grid);
-	getContentPane().addComponentListener(new SizeListener());
-	setVisible(true);
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    /**
+     * Sets the size of the window depending to the difficulty since different difficulties have different grid sizes.
+     * @param window An object of type Window or any of its sub classes.
+     * @param gameDifficulty The difficulty of the game
+     */
+
+    private void setWindowSize(GameFrame window, Constants.Difficulty gameDifficulty) {
+            windowSize = Constants.getWindowSizes(gameDifficulty);
+            int width= (int) windowSize.getWidth();
+            int height= (int) windowSize.getHeight();
+            window.setSize(width, height);
     }
 
     /**

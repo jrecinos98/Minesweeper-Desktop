@@ -38,8 +38,8 @@ public class MineGUI {
 	 */
 	public static void main (String[] args) {
 	    DBConnector.init();
+	    //MainMenu centered by constructor.
 	    mainMenu = new MainMenu();
-        centerWindow(mainMenu);
 	    helpScreen = new HelpScreen();
 	    centerWindow(helpScreen);
 	    leaderboardFrame = new LeaderboardFrame();
@@ -62,21 +62,6 @@ public class MineGUI {
 			JOptionPane.showMessageDialog(null, "There is no previous game to load", "No previous game", JOptionPane.DEFAULT_OPTION);
 		}
 	}
-
-
-
-
-
-    public static void centerWindow(Window frame) {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-        frame.setLocation(x, y);
-    }
-
-
-
-
 
 
 	/**
@@ -157,4 +142,20 @@ public class MineGUI {
 			return mainMenu;
 		}
 	}
+
+    /**
+     * Centers a Window object on screen.
+     * @param frame An object of type Window or any of its sub classes.
+     */
+
+    public static void centerWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
+    }
+
+
+
+
 }

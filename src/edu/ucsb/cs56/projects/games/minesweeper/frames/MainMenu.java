@@ -60,8 +60,6 @@ public class MainMenu extends JFrame {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
 		setResizable(false);
-		this.setLocationRelativeTo(null);
-
 
 		panel2 = new JPanel();
 		panel2.setOpaque(false);
@@ -202,7 +200,7 @@ public class MainMenu extends JFrame {
 
 		add(lblBackgroundImage);
 
-	
+        MineGUI.centerWindow(this);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
