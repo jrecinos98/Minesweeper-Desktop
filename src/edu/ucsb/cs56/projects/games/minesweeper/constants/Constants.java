@@ -74,7 +74,7 @@ public class Constants {
 	}
 
     /**
-     * links difficulty enum to a Point2D object that contains the width and height of frame
+     * links difficulty enum to a Dimension object that contains the width and height of frame
      * @param difficulty Difficulty enum member that you want the frame size of
      * @return Dimension object containing the width and height for the passed difficulty.
      */
