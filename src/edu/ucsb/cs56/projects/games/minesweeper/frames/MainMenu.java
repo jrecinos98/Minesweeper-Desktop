@@ -60,6 +60,7 @@ public class MainMenu extends JFrame {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
 		setResizable(false);
+		this.setLocationRelativeTo(null);
 
 
 		panel2 = new JPanel();
@@ -251,6 +252,7 @@ public class MainMenu extends JFrame {
         Image newimg = img.getScaledInstance(1000, 800,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
+
 	public int getEasyGameX() {
 		return easyGame.getX();
 	}

@@ -57,6 +57,7 @@ public class GameFrame extends JFrame {
     public GameFrame(Constants.Difficulty difficulty) throws IOException, ClassNotFoundException {
 	//super(); // is this line necessary?  what does it do?
 	setSize(650, 600);
+        MineGUI.centerWindow(this);
 	//Loads the game from a file if there is any.
 	if (difficulty == Constants.Difficulty.LOAD) {
 	    game = Grid.loadGame();

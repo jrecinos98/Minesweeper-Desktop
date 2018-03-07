@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.projects.games.minesweeper.gui;
 
+import java.awt.*;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -38,8 +39,11 @@ public class MineGUI {
 	public static void main (String[] args) {
 	    DBConnector.init();
 	    mainMenu = new MainMenu();
+        centerWindow(mainMenu);
 	    helpScreen = new HelpScreen();
+	    centerWindow(helpScreen);
 	    leaderboardFrame = new LeaderboardFrame();
+	    centerWindow(leaderboardFrame);
 	}
 
 	/**
@@ -58,6 +62,22 @@ public class MineGUI {
 			JOptionPane.showMessageDialog(null, "There is no previous game to load", "No previous game", JOptionPane.DEFAULT_OPTION);
 		}
 	}
+
+
+
+
+
+    public static void centerWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
+    }
+
+
+
+
+
 
 	/**
 	 * return to main menu from either the help screen or game frame
