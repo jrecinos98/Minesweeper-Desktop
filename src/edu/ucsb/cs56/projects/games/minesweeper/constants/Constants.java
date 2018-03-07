@@ -41,6 +41,9 @@ public class Constants {
 		EASY,
 		MEDIUM,
 		HARD,
+		HARDCORE,
+		EXTREME,
+		LEGENDARY,
 		LOAD,
 	}
 
@@ -62,6 +65,9 @@ public class Constants {
 			gridSizes.put(Difficulty.EASY, 10);
 			gridSizes.put(Difficulty.MEDIUM, 15);
 			gridSizes.put(Difficulty.HARD, 20);
+			gridSizes.put(Difficulty.HARDCORE, 25);
+			gridSizes.put(Difficulty.EXTREME, 35);
+			gridSizes.put(Difficulty.LEGENDARY, 50);
 		}
 		return gridSizes.get(difficulty);
 	}

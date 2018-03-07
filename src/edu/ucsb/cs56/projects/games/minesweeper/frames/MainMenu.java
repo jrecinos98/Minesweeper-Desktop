@@ -39,6 +39,9 @@ public class MainMenu extends JFrame {
 	private JButton easyGame;
 	private JButton medGame;
 	private JButton hardGame;
+	private JButton hardcoreGame;
+	private JButton extremeGame;
+	private JButton legendaryGame;
 	private JButton load; //loads game
 	private JButton help;    //Main Menu Help Button
 	private JButton highScore; // this label status displays the local high score.
@@ -96,6 +99,15 @@ public class MainMenu extends JFrame {
 		hardGame = new JButton("New Hard Game");
 		hardGame.setBackground(lowOpGrey);
 
+		hardcoreGame = new JButton("New Hardcore Game");
+		hardcoreGame.setBackground(lowOpGrey);
+
+		extremeGame = new JButton("New Extreme Game");
+		extremeGame.setBackground(lowOpGrey);
+
+		legendaryGame = new JButton("New Legendary Game");
+		extremeGame.setBackground(lowOpGrey);
+
 		highScore = new JButton("Leaderboards");
 		highScore.setBackground(lowOpGrey);
 
@@ -121,6 +133,21 @@ public class MainMenu extends JFrame {
 				MineGUI.newGame(Constants.Difficulty.HARD);
 			}
 		});
+		hardcoreGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.HARDCORE);
+			}
+		});
+		extremeGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.EXTREME);
+			}
+		});
+		legendaryGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.LEGENDARY);
+			}
+		});
 		help.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
 		load.addActionListener((ActionEvent e) -> { MineGUI.newGame(Constants.Difficulty.LOAD); });
 		quitMine.addActionListener((ActionEvent e) -> { MineGUI.quitPrompt(); });
@@ -139,6 +166,18 @@ public class MainMenu extends JFrame {
         panel2.add(Box.createVerticalStrut(15));
 
         panel2.add(hardGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(hardcoreGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(extremeGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(legendaryGame);
 
         panel2.add(Box.createVerticalStrut(15));
 
@@ -235,6 +274,32 @@ public class MainMenu extends JFrame {
 	public int getHardGameY() {
 		return hardGame.getY();
 	}
+
+	public int getHardcoreGameX() {
+		return hardcoreGame.getX();
+	}
+
+	public int getHardcoreGameY() {
+		return hardcoreGame.getY();
+	}
+
+	public int getExtremeGameX() {
+		return extremeGame.getX();
+	}
+
+	public int getExtremeGameY() {
+		return extremeGame.getY();
+	}
+
+	public int getLegendaryGameX() {
+		return legendaryGame.getX();
+	}
+
+	public int getLegendaryGameY() {
+		return legendaryGame.getY();
+	}
+
+
 
 	public int getLoadGameX() {
 		return load.getX();
