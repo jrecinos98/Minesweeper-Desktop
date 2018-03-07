@@ -276,7 +276,6 @@ public class GameFrame extends JFrame {
 		  AudioFormat format = audioInputStream.getFormat();
           DataLine.Info info= new DataLine.Info(Clip.class,format);
           Clip clip = (Clip) AudioSystem.getLine(info);
-          clip.flush();
           clip.addLineListener(e -> {
               if (e.getType() == LineEvent.Type.STOP) {
                   clip.close();
