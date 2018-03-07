@@ -106,7 +106,7 @@ public class MainMenu extends JFrame {
 		extremeGame.setBackground(lowOpGrey);
 
 		legendaryGame = new JButton("New Legendary Game");
-		extremeGame.setBackground(lowOpGrey);
+		legendaryGame.setBackground(lowOpGrey);
 
 		highScore = new JButton("Leaderboards");
 		highScore.setBackground(lowOpGrey);
