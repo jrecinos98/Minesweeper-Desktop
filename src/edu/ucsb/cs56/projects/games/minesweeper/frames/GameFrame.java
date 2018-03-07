@@ -1,16 +1,12 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Image;
+import java.awt.geom.Point2D;
 import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,18 +14,9 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.ImageIcon;
+import javax.sound.sampled.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.database.DBConnector;
@@ -54,7 +41,8 @@ public class GameFrame extends JFrame {
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
-
+    private static Dimension windowSize;
+    
 	private Color Grey = new Color(180,180,180);
 
     /**
@@ -64,37 +52,52 @@ public class GameFrame extends JFrame {
      * @throws ClassNotFoundException if loading fails
      */
     public GameFrame(Constants.Difficulty difficulty) throws IOException, ClassNotFoundException {
-	//super(); // is this line necessary?  what does it do?
-	setSize(650, 600);
-	//Loads the game from a file if there is any.
-	if (difficulty == Constants.Difficulty.LOAD) {
-	    game = Grid.loadGame();
-	} else {
-	    game = new Grid(difficulty);  // the Interface game
-	}
-	JToolBar toolbar = new JToolBar("In-game toolbar");
-	createToolbar(toolbar);//Function declared below
-	getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
-	grid = new JPanel(); //Declared at the top. Not of type Grid so this is allowed.
-	grid.setLayout(new GridLayout(game.getSize() ,0)); // GridLayout(int rows, int columns)
-	buttons = new JButton[game.getSize()][game.getSize()];//Array of buttons
-	for (int i = 0; i < game.getSize(); i++) {
-	    for (int j = 0; j < game.getSize(); j++) {
-		buttons[i][j] = new JButton();
-		buttons[i][j].setBackground(Grey);
-		buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
-		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
-		buttons[i][j].setIcon(null);
-		grid.add(buttons[i][j]);
-	    }
-	}
-	if (difficulty == Constants.Difficulty.LOAD) {
-	    refresh();
-	}
-	getContentPane().add(grid);
-	getContentPane().addComponentListener(new SizeListener());
-	setVisible(true);
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Constants.Difficulty gameDifficulty = difficulty;
+        if (gameDifficulty == Constants.Difficulty.LOAD) {
+            game = Grid.loadGame();
+            gameDifficulty = game.getDifficulty();
+        }
+        setWindowSize(this, gameDifficulty);
+        MineGUI.centerWindow(this);
+        if (game == null) {
+            game = new Grid(gameDifficulty);
+        }
+        JToolBar toolbar = new JToolBar("In-game toolbar");
+        createToolbar(toolbar);//Function declared below
+        getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
+        grid = new JPanel(); //Declared at the top. Not of type Grid so this is allowed.
+        grid.setLayout(new GridLayout(game.getSize() ,0)); // GridLayout(int rows, int columns)
+        buttons = new JButton[game.getSize()][game.getSize()];//Array of buttons
+        for (int i = 0; i < game.getSize(); i++) {
+            for (int j = 0; j < game.getSize(); j++) {
+            buttons[i][j] = new JButton();
+            buttons[i][j].setBackground(Grey);
+            buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
+            buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
+            buttons[i][j].setIcon(null);
+            grid.add(buttons[i][j]);
+            }
+        }
+        if (gameDifficulty == Constants.Difficulty.LOAD) {
+            refresh();
+        }
+        getContentPane().add(grid);
+        getContentPane().addComponentListener(new SizeListener());
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    /**
+     * Sets the size of the window depending to the difficulty since different difficulties have different grid sizes.
+     * @param window An object of type Window or any of its sub classes.
+     * @param gameDifficulty The difficulty of the game
+     */
+
+    private void setWindowSize(GameFrame window, Constants.Difficulty gameDifficulty) {
+            windowSize = Constants.getWindowSizes(gameDifficulty);
+            int width= (int) windowSize.getWidth();
+            int height= (int) windowSize.getHeight();
+            window.setSize(width, height);
     }
 
     /**
@@ -258,6 +261,8 @@ public class GameFrame extends JFrame {
      * plays a sound from the resources
      * @param dir name of the sound file to be played
      */
+   
+    
     public void playSound(String dir) {
 	if (dir != null) {
 	    try {
@@ -268,9 +273,19 @@ public class GameFrame extends JFrame {
 		  } else {
 		  audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(dir));
 		  }
-		 	Clip clip = AudioSystem.getClip();
-		  clip.open(audioInputStream);
-		  	clip.start();
+		  AudioFormat format = audioInputStream.getFormat();
+          DataLine.Info info= new DataLine.Info(Clip.class,format);
+          Clip clip = (Clip) AudioSystem.getLine(info);
+          clip.flush();
+          clip.addLineListener(e -> {
+              if (e.getType() == LineEvent.Type.STOP) {
+                  clip.close();
+              }
+          });
+          clip.open(audioInputStream);
+          clip.start();
+          audioInputStream.close();
+
 	    }
 	 
 	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
@@ -279,6 +294,7 @@ public class GameFrame extends JFrame {
 	 
 	}
     }
+
 
     public ImageIcon getImageIcon(String resource) {
 	File local = new File("resources/" + resource);
@@ -290,14 +306,20 @@ public class GameFrame extends JFrame {
 	}
 	Image img = icon.getImage();
 	//resize icon to fit button
-	Image newImg = img.getScaledInstance(grid.getWidth() / game.getSize() - 10, grid.getHeight() / game.getSize() - 10,  java.awt.Image.SCALE_DEFAULT) ;
+	Image newImg = img.getScaledInstance(grid.getWidth() / game.getSize(), grid.getHeight() / game.getSize(),  Image.SCALE_SMOOTH) ;
 	return new ImageIcon(newImg);
     }
 
     /**
      * Refreshed the grid to coincide with the game
      */
+
+
+
+
+
     public void refresh() {
+    ImageIcon theMine = getImageIcon("/images/mine.jpg");
 	int fontSize = buttons[0][0].getSize().height / 2;
 	if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
 	    fontSize = buttons[0][0].getSize().width / 4;
@@ -307,7 +329,8 @@ public class GameFrame extends JFrame {
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
 		if (game.isOpen(i, j)) {
 		    if (game.isMine(i, j)) {
-			buttons[i][j].setIcon(getImageIcon("/images/mine.jpg"));
+
+			buttons[i][j].setIcon(theMine);
 		    } else {
 			if (game.getCell(i, j) == '0') {
 			    buttons[i][j].setForeground(ZERO);
@@ -392,6 +415,11 @@ public class GameFrame extends JFrame {
 	 * Places player's symbol on button, checks for a winner or tie
 	 * @param event when a button is clicked
 	 */
+
+	
+	
+
+
 	public void mouseReleased(MouseEvent event) {
 	    String soundName = null;
 	    if (game.getGameState() == Constants.GameState.PLAYING) {
@@ -469,4 +497,5 @@ public class GameFrame extends JFrame {
 	    }
 	}
     } // class ButtonListener
+
 }

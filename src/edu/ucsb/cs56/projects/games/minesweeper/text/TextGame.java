@@ -109,6 +109,21 @@ public class TextGame {
 		return menuResponse;
 	}
 
+    /**
+     * Input in form of an int and then clears input stream
+     * @return user input or -1 if scanner.nextInt() throws an exception
+     */
+    private static int getIntInput() {
+        int temp;
+        try {
+            temp = sc.nextInt();
+        } catch (InputMismatchException e) {
+            temp = -1;
+        }
+        sc.nextLine();
+        return temp;
+    }
+
 	/**
 	 * Handle user input from main menu prompt and act accordingly
 	 * @param menuResponse user input in response to main menu
@@ -518,21 +533,6 @@ public class TextGame {
 			}
 		}
 		System.out.println();
-	}
-
-	/**
-	 * Input in form of an int and then clears input stream
-	 * @return user input or -1 if scanner.nextInt() throws an exception
-	 */
-	private static int getIntInput() {
-		int temp;
-		try {
-			temp = sc.nextInt();
-		} catch (InputMismatchException e) {
-			temp = -1;
-		}
-		sc.nextLine();
-		return temp;
 	}
 
 	/**

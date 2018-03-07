@@ -1,30 +1,26 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
 import java.awt.FlowLayout;
 import java.awt.Insets;
-import java.awt.Container;
-import java.awt.GridLayout;
+
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.awt.Dimension;
 
+
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.Box;
 
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+
+
+import java.awt.event.*;
 
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
@@ -43,15 +39,13 @@ public class MainMenu extends JFrame {
 	private JButton easyGame;
 	private JButton medGame;
 	private JButton hardGame;
+	private JButton hardcoreGame;
+	private JButton extremeGame;
+	private JButton legendaryGame;
 	private JButton load; //loads game
 	private JButton help;    //Main Menu Help Button
 	private JButton highScore; // this label status displays the local high score.
-	
-	private JPanel panel2;
-	private JLabel lblBackgroundImage = new JLabel();
-
     private Color lowOpGrey = new Color(192,192,192,160);
-    private Color white= new Color(255,255,255);
 
     /**
 	 * Default Constructor for main menu
@@ -61,9 +55,8 @@ public class MainMenu extends JFrame {
 		setTitle("MineSweeper");
 		setSize(1000, 800);
 		setResizable(false);
-		//super();
 
-		panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
 		panel2.setOpaque(false);
 		BoxLayout boxLayout= new BoxLayout(panel2, BoxLayout.Y_AXIS);
 		panel2.setLayout(boxLayout);
@@ -71,27 +64,19 @@ public class MainMenu extends JFrame {
 
 
 
-
-		ImageIcon icon = new ImageIcon();
-		icon = getBackgroundImage("/images/background.png");
-		lblBackgroundImage.setLayout(new FlowLayout());
+		ImageIcon icon = getBackgroundImage("/images/background.png");
+        JLabel lblBackgroundImage = new JLabel();
+        lblBackgroundImage.setLayout(new FlowLayout());
 		lblBackgroundImage.setIcon(icon);
+        playSound("/sounds/BackgroundMusic.au");
 
 
 
 
 
-
-		//add(new ContentPanel());
-		
-		setVisible(true);
-		setLocation(200, 200);
-
-		//Container menu = getContentPane();
-		//menu.setLayout(new GridLayout(7, 0)); //our 2 section grid layout for our main menu
 		load = new JButton("Load Last Game");
         load.setBackground(lowOpGrey);
-        // load.setForeground(white);
+
 
 		easyGame = new JButton("New Easy Game");
 		easyGame.setBackground(lowOpGrey);
@@ -101,6 +86,15 @@ public class MainMenu extends JFrame {
 
 		hardGame = new JButton("New Hard Game");
 		hardGame.setBackground(lowOpGrey);
+
+		hardcoreGame = new JButton("New Hardcore Game");
+		hardcoreGame.setBackground(lowOpGrey);
+
+		extremeGame = new JButton("New Extreme Game");
+		extremeGame.setBackground(lowOpGrey);
+
+		legendaryGame = new JButton("New Legendary Game");
+		legendaryGame.setBackground(lowOpGrey);
 
 		highScore = new JButton("Leaderboards");
 		highScore.setBackground(lowOpGrey);
@@ -127,6 +121,21 @@ public class MainMenu extends JFrame {
 				MineGUI.newGame(Constants.Difficulty.HARD);
 			}
 		});
+		hardcoreGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.HARDCORE);
+			}
+		});
+		extremeGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.EXTREME);
+			}
+		});
+		legendaryGame.addActionListener((ActionEvent e) -> {
+			if (MineGUI.overwriteSavePrompt()) {
+				MineGUI.newGame(Constants.Difficulty.LEGENDARY);
+			}
+		});
 		help.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
 		load.addActionListener((ActionEvent e) -> { MineGUI.newGame(Constants.Difficulty.LOAD); });
 		quitMine.addActionListener((ActionEvent e) -> { MineGUI.quitPrompt(); });
@@ -145,6 +154,18 @@ public class MainMenu extends JFrame {
         panel2.add(Box.createVerticalStrut(15));
 
         panel2.add(hardGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(hardcoreGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(extremeGame);
+
+        panel2.add(Box.createVerticalStrut(15));
+
+        panel2.add(legendaryGame);
 
         panel2.add(Box.createVerticalStrut(15));
 
@@ -168,45 +189,35 @@ public class MainMenu extends JFrame {
 
 		add(lblBackgroundImage);
 
-		//menu.add(panel);
-
-		//ImageIcon icon= new ImageIcon("screenshots/MINESWEEPERMenuScreen.png");
-		//JLabel backgroundPhoto= new JLabel();
-		//backgroundPhoto.setIcon(icon);
-
-		
-		//JLabel contentPane = new JLabel();
-		//contentPane.setIcon(new ImageIo("screenshots/MINESWEEPERMenuScreen.png"));
-		//contentPane.setLayout(new BorderLayout());
-		//menu.setContentPane(contentPane);
-/*
-		menu.add(easyGame);
-		menu.add(medGame);
-		menu.add(hardGame);
-		menu.add(load);
-		menu.add(help);
-		menu.add(quitMine);
-		menu.add(highScore); // add new highScore feature to frame.
-		*/
+        MineGUI.centerWindow(this);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-
-/*
-	private Image getScaledImage(Image srcImg, int w, int h){
-    	BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-    	Graphics2D g2 = resizedImg.createGraphics();
-
-    	g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    	g2.drawImage(srcImg, 0, 0, w, h, null);
-    	g2.dispose();
-
-    	return resizedImg;
-	}
-
-*/
-
+	private void playSound(String dir) {
+	if (dir != null) {
+	    try {
+		File resource = new File("resources" + dir);
+		AudioInputStream audioInputStream;
+		if (resource.exists()) {
+		  audioInputStream = AudioSystem.getAudioInputStream(resource.getAbsoluteFile());
+		  } else {
+		  audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(dir));
+		  }
+		  Clip clip = AudioSystem.getClip();
+		  clip.open(audioInputStream);
+		  FloatControl gainControl= (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+          gainControl.setValue(-5.0f);
+		  clip.loop(Clip.LOOP_CONTINUOUSLY);
+		  audioInputStream.close();
+	    }
+	 
+	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
+		e.printStackTrace();
+	    }
+	 
+	    }
+    }
 
     private ImageIcon getBackgroundImage(String dir){
         File local = new File("resources"+dir);
@@ -220,6 +231,7 @@ public class MainMenu extends JFrame {
         Image newimg = img.getScaledInstance(1000, 800,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         return new ImageIcon(newimg);
     }
+
 	public int getEasyGameX() {
 		return easyGame.getX();
 	}
@@ -244,6 +256,32 @@ public class MainMenu extends JFrame {
 		return hardGame.getY();
 	}
 
+	public int getHardcoreGameX() {
+		return hardcoreGame.getX();
+	}
+
+	public int getHardcoreGameY() {
+		return hardcoreGame.getY();
+	}
+
+	public int getExtremeGameX() {
+		return extremeGame.getX();
+	}
+
+	public int getExtremeGameY() {
+		return extremeGame.getY();
+	}
+
+	public int getLegendaryGameX() {
+		return legendaryGame.getX();
+	}
+
+	public int getLegendaryGameY() {
+		return legendaryGame.getY();
+	}
+
+
+
 	public int getLoadGameX() {
 		return load.getX();
 	}
@@ -263,5 +301,6 @@ public class MainMenu extends JFrame {
 	public int getLeaderBoardX() { return highScore.getX(); }
 
 	public int getLeaderBoardY() { return highScore.getY(); }
+
 
 }
