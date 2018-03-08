@@ -44,6 +44,7 @@ public class GameFrame extends JFrame {
     private static Dimension windowSize;
     
 	private Color Grey = new Color(180,180,180);
+	private Color Unpressed = new Color(158,158,160);
 
     /**
      * Constructs game from the given difficulty
@@ -71,7 +72,7 @@ public class GameFrame extends JFrame {
         for (int i = 0; i < game.getSize(); i++) {
             for (int j = 0; j < game.getSize(); j++) {
             buttons[i][j] = new JButton();
-            buttons[i][j].setBackground(Grey);
+            buttons[i][j].setBackground(Unpressed);
             buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
             buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
             buttons[i][j].setIcon(null);
@@ -323,6 +324,18 @@ public class GameFrame extends JFrame {
 	if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
 	    fontSize = buttons[0][0].getSize().width / 4;
 	}
+	while(Grid.getVisibleSize() != 0){
+	    Dimension cor = Grid.getLastCellCor();
+	    int i = (int) cor.getWidth();
+	    int j = (int) cor.getHeight();
+        buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
+        buttons[i][j].setBackground(Grey);
+        if(game.getCell(i,j) != '0') {
+            buttons[i][j].setForeground(NUMBER);
+            buttons[i][j].setText(Character.toString(game.getCell(i, j)));
+        }
+    }
+	/*
 	for (int i = 0; i < game.getSize(); i++) {
 	    for (int j = 0; j < game.getSize(); j++) {
 		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
@@ -331,12 +344,14 @@ public class GameFrame extends JFrame {
 
 			buttons[i][j].setIcon(theMine);
 		    } else {
+                buttons[i][j].setBackground(Grey);
 			if (game.getCell(i, j) == '0') {
 			    buttons[i][j].setForeground(ZERO);
 			} else {
 			    buttons[i][j].setForeground(NUMBER);
+				buttons[i][j].setText(Character.toString(game.getCell(i, j)));
 			}
-			buttons[i][j].setText(Character.toString(game.getCell(i, j)));
+
 		    }
 		} else if (game.isFlag(i, j)) {
 		    buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
@@ -345,7 +360,7 @@ public class GameFrame extends JFrame {
 		    buttons[i][j].setText("");
 		}
 	    }
-	}
+	}*/
     }
 
     /**
@@ -396,105 +411,147 @@ public class GameFrame extends JFrame {
      */
     class ButtonListener extends MouseAdapter {
 
-	private int row;
-	private int col;
+        private int row;
+        private int col;
 
-	/**
-	 * Constructs ButtonListener
-	 * @param i row value of the ButtonListener
-	 * @param j column value of the ButtonListener
-	 */
-	public ButtonListener(int i, int j) {
-	    super();
-	    row = i;
-	    col = j;
-	}
+        /**
+         * Constructs ButtonListener
+         *
+         * @param i row value of the ButtonListener
+         * @param j column value of the ButtonListener
+         */
+        public ButtonListener(int i, int j) {
+            super();
+            row = i;
+            col = j;
+        }
 
-	/**
-	 * Places player's symbol on button, checks for a winner or tie
-	 * @param event when a button is clicked
-	 */
+        public void updateSingleCell(JButton button) {
+            buttons[row][col].setBackground(Grey);
+            buttons[row][col].setText(Character.toString(game.getCell(row, col)));
+            buttons[row][col].setForeground(NUMBER);
+        }
 
-	
-	
+        public String getSound(MouseEvent event) {
+            //if you left click and the button is available (not a flag and not already opened)
+            if (event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(row, col) && !game.isOpen(row, col) && !flagBtn.isSelected()) {
+                if (game.searchBox(row, col) == 'X') {
+                    return "/sounds/explosion.wav";
+                } else {
+                    return "/sounds/clicked.wav";
+                }
+            }
+            // If you left click and the button is a flag or has been opened
+            else if (event.getButton() == MouseEvent.BUTTON1 && (game.isFlag(row, col) | game.isOpen(row, col)) && !flagBtn.isSelected()) {
+                return "/sounds/userError.wav";
+            }
+            // If you right click or have flag button selected
+            else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
+                if (!game.isOpen(row, col) && !game.isFlag(row, col)) {
+                    return "/sounds/place_flag.wav";
+                } else if (!game.isFlag(row, col)) {
+                    return "/sounds/userError.wav";
+                }
+            } else if (event.getButton() == MouseEvent.BUTTON1 && game.isOpen(row, col)) {
+                return "/sounds/userError.wav";
+            } else if (event.getButton() == MouseEvent.BUTTON2) {
+                if (game.searchSurrounding(row, col)) {
+                    return "/sounds/clicked.wav";
+                }
+            }
+            return "/sounds/userError.wav";
 
+        }
 
-	public void mouseReleased(MouseEvent event) {
-	    String soundName = null;
-	    if (game.getGameState() == Constants.GameState.PLAYING) {
-		if(event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(row, col) && !game.isOpen(row, col) && !flagBtn.isSelected()){
-		    //if you left click and the button is available (not a flag and not already opened)
-		    char result = game.searchBox(row, col);
-		    if (result == 'X') {
-			soundName = "/sounds/explosion.wav";
-			// will update gui when lost
-		    } else {
-			soundName = "/sounds/clicked.wav";
-			if (result == '0') {
-			    // need to update all cells since they opened up
-			    refresh();
-			} else {
-			    // only need to update the current cell
-			    buttons[row][col].setText(Character.toString(game.getCell(row, col)));
-			    buttons[row][col].setForeground(NUMBER);
-			}
-		    }
-		} else if (event.getButton() == MouseEvent.BUTTON1 && (game.isFlag(row, col) | game.isOpen(row, col)) && !flagBtn.isSelected()) {
-		    // If you left click and the button is a flag or has been opened
-		    soundName = "/sounds/userError.wav";
-		} else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
-		    // If you right click or have flag button selected
-		    if (game.isFlag(row, col)) {
-			game.deflagBox(row, col);
-			buttons[row][col].setIcon(null);
-		    } else if (!game.isOpen(row, col)) {
-			soundName = "/sounds/place_flag.wav";
-			game.flagBox(row, col);
-			buttons[row][col].setIcon(getImageIcon("/images/flag.png"));
-		    } else {
-			soundName = "/sounds/userError.wav";
-		    }
-		} else if (event.getButton() == MouseEvent.BUTTON1 && game.isOpen(row, col)){
-		    soundName = "/sounds/userError.wav";
-		} else if (event.getButton() == MouseEvent.BUTTON2) {
-		    if (game.searchSurrounding(row, col)) {
-			soundName = "/sounds/clicked.wav";
-			refresh();
-		    } else {
-			soundName = "/sounds/userError.wav";
-		    }
-		}
-		playSound(soundName);
-		if (game.getGameState() == Constants.GameState.LOST) {
-		    // display mines
-		    refresh();
-		    int response = JOptionPane.showOptionDialog(null, "You lose! Press 'Reset Game' to start a new game.", "Defeat!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
-		    if (response == JOptionPane.YES_OPTION) {
-			MineGUI.goToMainMenu();
-		    } else {
-			resetGame();
-		    }
-		} if (game.getGameState() == Constants.GameState.WON) {
-	       
-		    soundName = "/sounds/win.wav";
-		    playSound(soundName);
-		    if (DBConnector.isConnected()) {
-			String user = JOptionPane.showInputDialog(null, "You win! Enter your name for the leaderboard.", "Victory!", JOptionPane.QUESTION_MESSAGE);
-			if (user != null) {
-			    saveHighest(user, game.getGameTime());
-			}
-		    }
-		    int response = JOptionPane.showOptionDialog(null, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
-		    if (response == JOptionPane.YES_OPTION) {
-			MineGUI.goToMainMenu();
-		    } else if (response == JOptionPane.INFORMATION_MESSAGE) {
-			resetGame();
-		    } else {
-			//do nothing
-		    }
-		}
-	    }
-	}
-    } // class ButtonListener
+        //public void gameOver() {
+       // }
+
+        /**
+         * Places player's symbol on button, checks for a winner or tie
+         *
+         * @param event when a button is clicked
+         */
+        public void mouseReleased(MouseEvent event) {
+            String soundName = null;
+            if (game.getGameState() == Constants.GameState.PLAYING) {
+                if (event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(row, col) && !game.isOpen(row, col) && !flagBtn.isSelected()) {
+                    //if you left click and the button is available (not a flag and not already opened)
+                    char result = game.searchBox(row, col);
+                    if (result == 'X') {
+                        soundName = "/sounds/explosion.wav";
+                        playSound(soundName);
+                        gameLost();
+                    } else {
+                        soundName = "/sounds/clicked.wav";
+                        if (result == '0') {
+                            // need to update all cells since they opened up
+                            refresh();
+                        } else {
+                            // only need to update the current cell
+                            updateSingleCell(buttons[row][col]);
+
+                        }
+                    }
+                } else if (event.getButton() == MouseEvent.BUTTON1 && (game.isFlag(row, col) | game.isOpen(row, col)) && !flagBtn.isSelected()) {
+                    // If you left click and the button is a flag or has been opened
+                    soundName = "/sounds/userError.wav";
+                } else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
+                    // If you right click or have flag button selected
+                    if (game.isFlag(row, col)) {
+                        game.deflagBox(row, col);
+                        buttons[row][col].setIcon(null);
+                    } else if (!game.isOpen(row, col)) {
+                        soundName = "/sounds/place_flag.wav";
+                        game.flagBox(row, col);
+                        buttons[row][col].setIcon(getImageIcon("/images/flag.png"));
+                    } else {
+                        soundName = "/sounds/userError.wav";
+                    }
+                } else if (event.getButton() == MouseEvent.BUTTON1 && game.isOpen(row, col)) {
+                    soundName = "/sounds/userError.wav";
+                } else if (event.getButton() == MouseEvent.BUTTON2) {
+                    if (game.searchSurrounding(row, col)) {
+                        soundName = "/sounds/clicked.wav";
+                        refresh();
+                    } else {
+                        soundName = "/sounds/userError.wav";
+                    }
+                }
+                if (game.getGameState() != Constants.GameState.LOST)
+                    playSound(soundName);
+                if (game.getGameState() == Constants.GameState.WON) {
+                    soundName = "/sounds/win.wav";
+                    playSound(soundName);
+                    gameWonPrompt(DBConnector.isConnected());
+                }
+            }
+        } // class ButtonListener
+
+        public void gameLost() {
+            int response = JOptionPane.showOptionDialog(null, "You lose! Press 'Reset Game' to start a new game.", "Defeat!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
+            if (response == JOptionPane.YES_OPTION) {
+                MineGUI.goToMainMenu();
+            }
+            resetGame();
+        }
+
+        public void gameWonPrompt(boolean database) {
+            if (database) {
+                String user = JOptionPane.showInputDialog(null, "You win! Enter your name for the leaderboard.", "Victory!", JOptionPane.QUESTION_MESSAGE);
+                if (user != null) {
+                    saveHighest(user, game.getGameTime());
+                }
+            }
+            int response = JOptionPane.showOptionDialog(null, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
+            if (response == JOptionPane.YES_OPTION) {
+                MineGUI.goToMainMenu();
+            } else if (response == JOptionPane.INFORMATION_MESSAGE) {
+                resetGame();
+            } else {
+                //do nothing
+            }
+        }
+    }
+
 
 }

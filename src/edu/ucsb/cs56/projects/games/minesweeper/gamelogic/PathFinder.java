@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.projects.games.minesweeper.gamelogic;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
+import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 
 
 public class PathFinder {
@@ -11,6 +12,7 @@ public class PathFinder {
      */
     public static void findEmpty(int k, int n, GridComponent[][] cell){
         cell[k][n].open();
+        Grid.addVisibleCell(k,n);
         Grid.incrementCorrectMoves();
         char empty= '0';
         if (k-1>=0) {
@@ -20,6 +22,7 @@ public class PathFinder {
                 }
                 else {
                     cell[k - 1][n].open();
+                    Grid.addVisibleCell(k-1,n);
                     Grid.incrementCorrectMoves();
                 }
 
@@ -32,6 +35,7 @@ public class PathFinder {
                 }
                 else {
                     cell[k][n-1].open();
+                    Grid.addVisibleCell(k,n-1);
                     Grid.incrementCorrectMoves();
                 }
 
@@ -45,6 +49,7 @@ public class PathFinder {
                 }
                 else {
                     cell[k][n+1].open();
+                    Grid.addVisibleCell(k,n+1);
                     Grid.incrementCorrectMoves();
                 }
 
@@ -57,6 +62,7 @@ public class PathFinder {
                 }
                 else {
                     cell[k+1][n].open();
+                    Grid.addVisibleCell(k+1,n);
                     Grid.incrementCorrectMoves();
                 }
 

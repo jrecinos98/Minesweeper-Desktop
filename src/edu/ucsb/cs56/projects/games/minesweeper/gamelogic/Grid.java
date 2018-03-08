@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.projects.games.minesweeper.gamelogic;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,10 +9,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.Timer;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.PathFinder;
+
+import javax.swing.*;
 
 /**
  * The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
@@ -35,6 +39,7 @@ public class Grid implements Serializable{
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
 	private static int correctMoves;
+	private static ArrayList<Dimension> visibleCells;
 
 	/**
 	 * Default constructor for objects of class GUIGrid
@@ -52,12 +57,29 @@ public class Grid implements Serializable{
 		this.difficulty = difficulty;
 		correctMoves = 0;
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
+		visibleCells = new ArrayList<Dimension>();
 		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
 		startTimer();
 	}
+	public static int getVisibleSize(){return visibleCells.size() -1 ;}
+	public static Dimension getLastCellCor(){
+        Dimension last;
+        if (visibleCells.size()-1 != 0) {
+            last = visibleCells.get(visibleCells.size() - 1);
+            Dimension lastVisible= new Dimension((int)last.getWidth(),(int)last.getHeight());
+            visibleCells.remove(visibleCells.size() -1);
+            return lastVisible;
+        }
+        return null;
+
+    }
+    public static void addVisibleCell(int row, int column){
+	    Dimension last= new Dimension(row,column);
+	    visibleCells.add(last);
+    }
 	public static void incrementCorrectMoves(){
 	    correctMoves++;
     }
@@ -75,8 +97,7 @@ public class Grid implements Serializable{
                 grid[i][j] = new GridComponent();
             }
         }
-        int bombs=(int) Math.log((difficulty.ordinal()*grid.length)+1) * grid.length;
-
+        int bombs= (int)((Math.sqrt(difficulty.ordinal())+ difficulty.ordinal()/2) *grid.length);
         while (bombs > 0){
             int x = random.nextInt(grid.length);
             int y = random.nextInt(grid.length);
@@ -154,6 +175,7 @@ public class Grid implements Serializable{
 	public void endGame() {
 		stopTimer();
 		deleteSave();
+		exposeMines();
 	}
 
 	/**
@@ -312,21 +334,18 @@ public class Grid implements Serializable{
 				if (grid[i][j].getIsMine()) {
 					gameState = Constants.GameState.LOST;
 					endGame();
-					exposeMines();
 				} else {
                     if (currentCell == '0') {
                         findAll(i, j);
                     }
                     else{
-                        if(!grid[i][j].getIsFlagged())
-                            correctMoves++;
+                        incrementCorrectMoves();
                         if (correctMoves >= grid.length * grid.length) {
                             gameState = Constants.GameState.WON;
                             endGame();
                         }
 
                     }
-                    System.out.println(correctMoves);
 
 				}
 			}
