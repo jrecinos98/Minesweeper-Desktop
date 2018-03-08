@@ -79,6 +79,7 @@ public class Grid implements Serializable{
     }
 	public static void incrementCorrectMoves(){
 	    correctMoves++;
+	    //System.out.println(correctMoves);
     }
     public static void decrementCorrectMoves(){
 	    correctMoves--;
@@ -92,6 +93,8 @@ public class Grid implements Serializable{
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
                 grid[i][j] = new GridComponent();
+                grid[i][j].setXCor(i);
+                grid[i][j].setYCor(j);
             }
         }
         int bombs= (int)((Math.sqrt(difficulty.ordinal())+ difficulty.ordinal()/2) *grid.length);
@@ -364,7 +367,7 @@ public class Grid implements Serializable{
 			// TODO: places 'F' only after a left click on a nonflag occurs?
 			grid[i][j].setFlagged(true);
 			if (grid[i][j].getIsMine()) {
-				correctMoves++;
+				incrementCorrectMoves();
 				if (correctMoves >= grid.length * grid.length) { 
 					gameState = Constants.GameState.WON;
 					endGame();

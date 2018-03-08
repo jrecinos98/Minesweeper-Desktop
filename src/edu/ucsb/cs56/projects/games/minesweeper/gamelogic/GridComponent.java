@@ -12,6 +12,8 @@ public class GridComponent implements Serializable {
 	private boolean isOpen;
 	private boolean isFlagged;
 	private char symbol;
+	private int xCor;
+	private int yCor;
 
 	/**
 	 * Creates default grid element
@@ -32,7 +34,18 @@ public class GridComponent implements Serializable {
 			symbol++;
 		}
 	}
-
+	public void setXCor(int x){
+	    xCor=x;
+    }
+    public void setYCor(int y){
+	    yCor=y;
+    }
+    public int getX(){
+	    return xCor;
+    }
+    public int getY(){
+	    return yCor;
+    }
 	/**
 	 * Make this cell a mine
 	 * Won;t work if already a mine
