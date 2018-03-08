@@ -65,16 +65,13 @@ public class Grid implements Serializable{
 		startTimer();
 	}
 	public static int getVisibleSize(){return visibleCells.size() -1 ;}
-	public static Dimension getLastCellCor(){
-        Dimension last;
-        if (visibleCells.size()-1 != 0) {
-            last = visibleCells.get(visibleCells.size() - 1);
-            Dimension lastVisible= new Dimension((int)last.getWidth(),(int)last.getHeight());
-            visibleCells.remove(visibleCells.size() -1);
-            return lastVisible;
-        }
-        return null;
-
+	public static Dimension getCellCor(int x){
+        Dimension last= visibleCells.get(x);
+        Dimension lastVisible= new Dimension((int)last.getWidth(),(int)last.getHeight());
+        return lastVisible;
+    }
+    public static void removeCellCor(int x){
+        visibleCells.remove(x);
     }
     public static void addVisibleCell(int row, int column){
 	    Dimension last= new Dimension(row,column);
@@ -400,6 +397,7 @@ public class Grid implements Serializable{
     public void findAll(int row, int col) { //TODO: throw exception
         PathFinder.findEmpty(row,col,grid);
     }
+
 
 	/**
 	 * Display where all the mines were after a user lost
