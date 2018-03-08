@@ -56,10 +56,6 @@ public class Grid implements Serializable{
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
-		/*for (int i = 0; i < difficulty.ordinal() * grid.length; i++) {
-			setMine();
-		}*/
-		//timer shouldnt start until the first tile is tapped.
 		startTimer();
 	}
 	public static void incrementCorrectMoves(){
@@ -79,15 +75,12 @@ public class Grid implements Serializable{
                 grid[i][j] = new GridComponent();
             }
         }
-        int bombs=difficulty.ordinal() * grid.length;
-        //int counter=0;
+        int bombs=(int) Math.log((difficulty.ordinal()*grid.length)+1) * grid.length;
+
         while (bombs > 0){
             int x = random.nextInt(grid.length);
             int y = random.nextInt(grid.length);
             if (!grid[x][y].getIsMine()){
-                //counter ++;
-                //System.out.println("Bomb at position: ["+x+"]["+y+"]");
-                //System.out.println("Bomb Counter = " + counter);
                 grid[x][y].makeMine();
                 bombCounter(grid,x,y);
                 bombs--;
@@ -103,7 +96,7 @@ public class Grid implements Serializable{
      * @param column The column where the cell is found in.
      */
     private void bombCounter(GridComponent[][] cells, final int row, final int column){
-        //if bomb is not in a corner or edge the default values defined below will be used.
+        //If bomb is not on edge then use passed values.
         int xStart=row-1;
         int xEnd=row+1;
         int yStart=column-1;
@@ -128,7 +121,6 @@ public class Grid implements Serializable{
             for(int n=yStart; n<=yEnd; n++){
                 if(!cells[k][n].getIsMine()) {
                     cells[k][n].iterate();
-                    //System.out.println("Cell["+k+"]["+n+"]="+ cells[k][n].getSymbol());
                 }
             }
         }
@@ -314,13 +306,7 @@ public class Grid implements Serializable{
 	 */
 	public char searchBox(int i, int j) {
 		char currentCell = 'e';
-		if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
-			// set variable to an object in the grid
-			if (grid[i][j].getIsFlagged()) {
-				//System.out.println("You cannot search a flagged box!");
-			} else if (grid[i][j].getIsOpen()) {
-				//System.out.println("You cannot search an opened box!");
-			} else {
+		if (!grid[i][j].getIsOpen() && !grid[i][j].getIsFlagged() ){
 				currentCell = grid[i][j].getSymbol();
                 grid[i][j].open();
 				if (grid[i][j].getIsMine()) {
@@ -344,7 +330,7 @@ public class Grid implements Serializable{
 
 				}
 			}
-		}
+
 		return currentCell;
 	}
 
