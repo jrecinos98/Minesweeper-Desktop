@@ -11,6 +11,7 @@ import java.util.*;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
+import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.PathFinder;
 
 /**
  * The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
@@ -33,7 +34,7 @@ public class Grid implements Serializable{
 	private GridComponent[][] grid;
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
-	private int correctMoves;
+	private static int correctMoves;
 
 	/**
 	 * Default constructor for objects of class GUIGrid
@@ -53,12 +54,7 @@ public class Grid implements Serializable{
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
 		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
-			grid[3][3].makeMine();
-			for (int i = 2; i <= 3; i++) {
-				for (int j = 2; j <= 3; j++) {
-					grid[i][j].iterate();
-				}
-			}
+			prepareTest(grid);
 		}
 		/*for (int i = 0; i < difficulty.ordinal() * grid.length; i++) {
 			setMine();
@@ -66,6 +62,91 @@ public class Grid implements Serializable{
 		//timer shouldnt start until the first tile is tapped.
 		startTimer();
 	}
+	public static void incrementCorrectMoves(){
+	    correctMoves++;
+    }
+    public static void decrementCorrectMoves(){
+	    correctMoves--;
+    }
+
+    /**
+     * Sets all cells in the grid to either bombs or a numerical value.
+     */
+    public void setCells() {
+        Random random = new Random();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                grid[i][j] = new GridComponent();
+            }
+        }
+        int bombs=difficulty.ordinal() * grid.length;
+        //int counter=0;
+        while (bombs > 0){
+            int x = random.nextInt(grid.length);
+            int y = random.nextInt(grid.length);
+            if (!grid[x][y].getIsMine()){
+                //counter ++;
+                //System.out.println("Bomb at position: ["+x+"]["+y+"]");
+                //System.out.println("Bomb Counter = " + counter);
+                grid[x][y].makeMine();
+                bombCounter(grid,x,y);
+                bombs--;
+            }
+
+        }
+    }
+
+    /**
+     * Finds all the bombs around a given cell.
+     * @param cells GridComponent[][] containing all the cells.
+     * @param row The row that the cell is found in.
+     * @param column The column where the cell is found in.
+     */
+    private void bombCounter(GridComponent[][] cells, final int row, final int column){
+        //if bomb is not in a corner or edge the default values defined below will be used.
+        int xStart=row-1;
+        int xEnd=row+1;
+        int yStart=column-1;
+        int yEnd=column+1;
+        //if the bomb is on the left edge.
+        if (xStart <0){
+            xStart=row;
+        }
+        //if the bomb is in the right edge.
+        else if(xEnd > cells.length-1){
+            xEnd=row;
+        }
+        //if the bomb is in the top edge.
+        if (yStart < 0){
+            yStart=column;
+        }
+        //if the bomb is in the bottom edge.
+        else if(yEnd > cells[row].length-1){
+            yEnd=column;
+        }
+        for(int k=xStart; k<=xEnd; k++){
+            for(int n=yStart; n<=yEnd; n++){
+                if(!cells[k][n].getIsMine()) {
+                    cells[k][n].iterate();
+                    //System.out.println("Cell["+k+"]["+n+"]="+ cells[k][n].getSymbol());
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Prepares a test grid if the difficulty is TEST.
+     * @param grid CellComponent[][] containing all the cells.
+     */
+	private void prepareTest(GridComponent[][] grid) {
+        grid[3][3].makeMine();
+        for (int i = 2; i <= 3; i++) {
+            for (int j = 2; j <= 3; j++) {
+                grid[i][j].iterate();
+            }
+        }
+    }
 
 	/**
 	 * Delete the current save file
@@ -123,77 +204,6 @@ public class Grid implements Serializable{
 		return difficulty;
 	}
 
-	/**
-	 * Sets all cells in the grid to zero.
-	 */
-	public void setCells() {
-        Random random = new Random();
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				grid[i][j] = new GridComponent();
-			}
-		}
-		int bombs=difficulty.ordinal() * grid.length;
-		while (bombs > 0){
-		    int x = random.nextInt(grid.length);
-		    int y = random.nextInt(grid.length);
-		    if (!grid[x][y].getIsMine()){
-		        grid[x][y].makeMine();
-            }
-            bombs--;
-		    bombCounter(grid,x,y);
-        }
-	}
-    private void bombCounter(GridComponent[][] cells, final int width, final int height){
-        //if bomb is not in a corner or edge the default values defined below will be used.
-        int xStart=width-1;
-        int xEnd=width+1;
-        int yStart=height-1;
-        int yEnd=height+1;
-        //if the bomb is on the left edge.
-        if (xStart <0){
-            xStart=width;
-        }
-        //if the bomb is in the right edge.
-        else if(xEnd > cells.length-1){
-            xEnd=width;
-        }
-        //if the bomb is in the top edge.
-        if (yStart < 0){
-            yStart=height;
-        }
-        //if the bomb is in the bottom edge.
-        else if(yEnd > cells[width].length-1){
-            yEnd=height;
-        }
-        for(int k=xStart; k<=xEnd; k++){
-            for(int n=yStart; n<=yEnd; n++){
-                cells[k][n].iterate();
-            }
-        }
-
-    }
-/*
-	/**
-	 * Finds a random Empty cell and makes it a Mine
-	 *
-	public void setMine() {
-		int spotX = (int) (grid.length * grid.length * Math.random());
-		int a = spotX / grid.length;
-		int b = spotX % grid.length;
-		if (grid[a][b].makeMine()) {
-			for (int i = a - 1; i <= a + 1; i++) {
-				for (int j = b - 1; j <= b + 1; j++) {
-					if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
-						grid[i][j].iterate();
-					}
-				}
-			}
-		} else {
-			setMine();
-		}
-	}
-*/
 	/**
 	 * Prints out the game
 	 * Used for the text game
@@ -303,7 +313,7 @@ public class Grid implements Serializable{
 	 * @return a the symbol of the cell that was just opened or 'e' if not opened
 	 */
 	public char searchBox(int i, int j) {
-		char spot = 'e';
+		char currentCell = 'e';
 		if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
 			// set variable to an object in the grid
 			if (grid[i][j].getIsFlagged()) {
@@ -311,24 +321,31 @@ public class Grid implements Serializable{
 			} else if (grid[i][j].getIsOpen()) {
 				//System.out.println("You cannot search an opened box!");
 			} else {
-				spot = grid[i][j].getSymbol();
-				grid[i][j].open();
+				currentCell = grid[i][j].getSymbol();
+                grid[i][j].open();
 				if (grid[i][j].getIsMine()) {
 					gameState = Constants.GameState.LOST;
 					endGame();
 					exposeMines();
 				} else {
-					correctMoves++;
-					if (correctMoves >= grid.length * grid.length) {
-						gameState = Constants.GameState.WON;
-						endGame();
-					} else if (grid[i][j].getSymbol() == '0') {
-						findAllZeros(i, j);
-					}
+                    if (currentCell == '0') {
+                        findAll(i, j);
+                    }
+                    else{
+                        if(!grid[i][j].getIsFlagged())
+                            correctMoves++;
+                        if (correctMoves >= grid.length * grid.length) {
+                            gameState = Constants.GameState.WON;
+                            endGame();
+                        }
+
+                    }
+                    System.out.println(correctMoves);
+
 				}
 			}
 		}
-		return spot;
+		return currentCell;
 	}
 
 	/**
@@ -365,7 +382,7 @@ public class Grid implements Serializable{
 		} else {
 			grid[i][j].setFlagged(false);
 			if (grid[i][j].getIsMine()) {
-				correctMoves--;
+				decrementCorrectMoves();
 			}
 		}
 	}
@@ -375,32 +392,8 @@ public class Grid implements Serializable{
 	 * @param row row of box cell
 	 * @param col column of box cell
 	 */
-    public void findAllZeros(int row, int col) { //TODO: throw exception
-	Queue<Integer> bfs = new LinkedList<Integer>();
-	if (grid[row][col].getSymbol() == '0') {
-	    bfs.add(row * grid.length + col);
-	    while (!bfs.isEmpty()) {
-		row = bfs.peek() / grid.length;
-		col = bfs.poll() % grid.length;
-		if (grid[row][col].getSymbol() == '0') {
-		    for (int i = row - 1; i <= row + 1; i++) {
-			for (int j = col - 1; j <= col + 1; j++) {
-			    if (i >= 0 && i < grid.length && j >= 0 && j < grid.length && !grid[i][j].getIsFlagged() && !grid[i][j].getIsMine() && !grid[i][j].getIsOpen()) {
-				correctMoves++;
-				if (correctMoves >= grid.length * grid.length) {
-				    gameState = Constants.GameState.WON;
-				    endGame();
-				}
-				if (grid[i][j].getSymbol() == '0') {
-				    bfs.add(i * grid.length + j);
-				}
-				grid[i][j].open();
-			    }
-			}
-		    }
-		}
-	    }
-	}
+    public void findAll(int row, int col) { //TODO: throw exception
+        PathFinder.findEmpty(row,col,grid);
     }
 
 	/**

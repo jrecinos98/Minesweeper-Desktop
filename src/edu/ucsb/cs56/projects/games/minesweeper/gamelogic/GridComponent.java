@@ -82,6 +82,16 @@ public class GridComponent implements Serializable {
 	public boolean getIsFlagged() {
 		return isFlagged;
 	}
+    /**
+     *
+     */
+    public boolean getIsMarked(){
+        if (getIsFlagged() || getIsOpen()){
+            return true;
+        }
+        else
+            return false;
+    }
 
 	/**
 	 * Get whether cell is a mine
