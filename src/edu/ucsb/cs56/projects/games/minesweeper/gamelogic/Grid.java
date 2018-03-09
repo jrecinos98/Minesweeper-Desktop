@@ -39,7 +39,7 @@ public class Grid implements Serializable{
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
 	private int correctMoves;
-	private static ArrayList<Dimension> visibleCells;
+	private transient ArrayList<Dimension> visibleCells;
 
 	/**
 	 * Default constructor for objects of class GUIGrid
@@ -64,22 +64,22 @@ public class Grid implements Serializable{
 		}
 		startTimer();
 	}
-	public static int getVisibleSize(){return visibleCells.size() -1 ;}
-	public static Dimension getCellCor(int x){
+	public int getVisibleSize(){return visibleCells.size() ;}
+	public Dimension getCellCor(int x){
         Dimension last= visibleCells.get(x);
         Dimension lastVisible= new Dimension((int)last.getWidth(),(int)last.getHeight());
         return lastVisible;
     }
-    public static void removeCellCor(int x){
-        visibleCells.remove(x);
+    public void removeAllVisible()
+	{
+		visibleCells.clear();
     }
-    public static void addVisibleCell(int row, int column){
+    public void addVisibleCell(int row, int column){
 	    Dimension last= new Dimension(row,column);
 	    visibleCells.add(last);
     }
 	public void incrementCorrectMoves(){
 	    correctMoves++;
-	    //System.out.println(correctMoves);
     }
     public void decrementCorrectMoves(){
 	    correctMoves--;
@@ -336,7 +336,7 @@ public class Grid implements Serializable{
 					endGame();
 				} else {
                     if (currentCell == '0') {
-                        findAll(i, j);
+                        PathFinder.findEmpty(i, j,this);
                     }
                     else{
                         incrementCorrectMoves();
@@ -393,19 +393,9 @@ public class Grid implements Serializable{
 	}
 
 	/**
-	 * Looks for surrounding numbers near the cell and opens them, repeats when find another zero
-	 * @param row row of box cell
-	 * @param col column of box cell
-	 */
-    public void findAll(int row, int col) { //TODO: throw exception
-        PathFinder.findEmpty(row,col,grid);
-    }
-
-
-	/**
 	 * Display where all the mines were after a user lost
 	 */
-	private void exposeMines() {
+	public void exposeMines() {
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				if (grid[i][j].getIsMine()) {
@@ -423,13 +413,17 @@ public class Grid implements Serializable{
 		return gameState;
 	}
 
+	public GridComponent getCell(int x, int y){
+		return grid[x][y];
+	}
+
 	/**
 	 * Get the symbol of a cell
 	 * @param i row of box cell
 	 * @param j column of box cell
 	 * @return the symbol of the cell
 	 */
-	public char getCell(int i, int j) {
+	public char getCellSymbol(int i, int j) {
 		return grid[i][j].getSymbol();
 	}
 

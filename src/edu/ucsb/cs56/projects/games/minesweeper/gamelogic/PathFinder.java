@@ -15,25 +15,22 @@ public class PathFinder{
      * Searches for all the cells that need to be visible.
      * @param k Row of the current cell
      * @param n Column of the current cell
-     * @param cell GridComponent[][] that contains all of the cells in the grid.
+     * @param grid Grid object that contains all of the cells.
      */
-    public static void findEmpty(int k, int n, GridComponent[][] cell){
-        stackPush(cell[k][n]);
+    public static void findEmpty(int k, int n, Grid grid){
+        stackPush(grid.getCell(k,n));
         GridComponent temp;
-        int counter=0;
-        System.out.println("X:"+k+ "  Y:"+n);
+        //System.out.println("X:"+k+ "  Y:"+n);
         while(!stack.empty()) {
             temp=stack.pop();
             temp.open();
-            Grid.addVisibleCell(temp.getX(), temp.getY());
-            counter++;
-            System.out.println(counter);
+            grid.addVisibleCell(temp.getX(), temp.getY());
             if (temp.getSymbol() == '0') {
-                surroundingCells(cell, temp.getX(), temp.getY());
+                surroundingCells(grid, temp.getX(), temp.getY());
             }
         }
     }
-    private static void surroundingCells(GridComponent[][] cells, final int row, final int column){
+    private static void surroundingCells(Grid grid, final int row, final int column){
         //If cell is not on edge then use passed values.
         int xStart=row-1;
         int xEnd=row+1;
@@ -44,7 +41,7 @@ public class PathFinder{
             xStart=row;
         }
         //if the cell is in the right edge.
-        else if(xEnd > cells.length-1){
+        else if(xEnd > grid.getSize()-1){
             xEnd=row;
         }
         //if the cell is in the top edge.
@@ -52,27 +49,29 @@ public class PathFinder{
             yStart=column;
         }
         //if the cell is in the bottom edge.
-        else if(yEnd > cells[row].length-1){
+        else if(yEnd > grid.getSize()-1){
             yEnd=column;
         }
         for(int k=xStart; k<=xEnd; k++){
             for(int n=yStart; n<=yEnd; n++){
-                if(!cells[k][n].getIsMarked() && cells[k][n].getSymbol()=='0') {
-                    stack.push(cells[k][n]);
+                if(!grid.getCell(k,n).getIsMarked() && grid.getCell(k,n).getSymbol()=='0') {
+                    if(stack.search(grid.getCell(k,n)) == -1) {
+                        stack.push(grid.getCell(k, n));
+                    }
                 }
-                else if (!cells[k][n].getIsMarked()){
-                    cells[k][n].open();
-                    Grid.addVisibleCell(k,n);
+                else if (!grid.getCell(k,n).getIsMarked()){
+                    grid.getCell(k,n).open();
+                    grid.addVisibleCell(k,n);
                 }
             }
         }
 
     }
-    private static void stackPush(GridComponent cell){
+    private static void stackPush(GridComponent grid){
         if(stack == null) {
             stack = new Stack<GridComponent>();
         }
-        stack.push(cell);
+        stack.push(grid);
     }
 
     /*

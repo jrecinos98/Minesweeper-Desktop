@@ -32,6 +32,9 @@ public class GameFrame extends JFrame {
 
     private static final Color ZERO = new Color(0, 0, 128);
     private static final Color NUMBER = new Color(0, 100, 0);
+    private static Dimension windowSize;
+
+
     private Grid game;
     private JButton[][] buttons;
     private JTextField timeDisplay;
@@ -41,10 +44,8 @@ public class GameFrame extends JFrame {
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
-    private static Dimension windowSize;
-    
 	private Color Grey = new Color(180,180,180);
-	private Color Unpressed = new Color(158,158,160);
+	private Color Unpressed = new Color(158,158,158);
 
     /**
      * Constructs game from the given difficulty
@@ -81,25 +82,109 @@ public class GameFrame extends JFrame {
             }
         }
         if (gameDifficulty == Constants.Difficulty.LOAD) {
-            refresh();
+            reload();
         }
         getContentPane().add(grid);
         getContentPane().addComponentListener(new SizeListener());
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
     /**
      * Sets the size of the window depending to the difficulty since different difficulties have different grid sizes.
      * @param window An object of type Window or any of its sub classes.
      * @param gameDifficulty The difficulty of the game
      */
-
     private void setWindowSize(GameFrame window, Constants.Difficulty gameDifficulty) {
             windowSize = Constants.getWindowSizes(gameDifficulty);
             int width= (int) windowSize.getWidth();
             int height= (int) windowSize.getHeight();
             window.setSize(width, height);
+
+    }
+    /**
+     * Initializes toolbar at the top of the screen
+     * @param toolbar toolbar to be initialized
+     */
+    public void createToolbar(JToolBar toolbar) {
+        //make buttons
+        refresh = new JButton("Reset Game");
+        mainMenu = new JButton("Main Menu");
+        quitMine = new JButton("Quit Minesweeper");
+        inGameHelp = new JButton("Help");
+        flagBtn = new JButton("Flag"); //new ImageIcon("resource/images/flag.png"));
+        timeDisplay = new JTextField(game.getGameTime());
+        timeDisplay.setColumns(4);
+        timeDisplay.setEditable(false);
+        Timer t = new Timer(); //It refreshes the timeDisplay every second.
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timeDisplay.setText(Integer.toString(game.getGameTime()));
+            }
+        }, 0, 1);
+        refresh.addActionListener((ActionEvent e)-> {
+            if (MineGUI.overwriteSavePrompt()) {
+                resetGame();
+            }
+        });
+        mainMenu.addActionListener((ActionEvent e) -> {
+            game.save();
+            MineGUI.goToMainMenu();
+        });
+        inGameHelp.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
+        quitMine.addActionListener((ActionEvent e) -> {
+            game.save();
+            MineGUI.quitPrompt();
+        });
+        flagBtn.addActionListener((ActionEvent e) -> { flag(); });
+        toolbar.add(flagBtn);
+        toolbar.add(mainMenu);
+        toolbar.add(refresh);
+        toolbar.add(inGameHelp);
+        toolbar.add(quitMine);
+        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        toolbar.add(timeDisplay);
+        toolbar.setFloatable(false);
+    }
+    /**
+     * Set the font of a button and change background Color.
+     * @param button JButton that is to be modified.
+     */
+    private void setUpButton(JButton button){
+        int fontSize = buttons[0][0].getSize().height / 2;
+        if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
+            fontSize = buttons[0][0].getSize().width / 4;
+        }
+        button.setFont(new Font("sansserif", Font.BOLD, fontSize));
+        button.setBackground(Grey);
+    }
+
+    /**
+     * Updates only a single cell on the grid, to either a numerical value or to a bomb.
+     * @param x xCor of button
+     * @param y yCor of button
+     * @param mineIcon Image of mine to be used.
+     */
+    private void updateSingleCell(int x, int y, ImageIcon mineIcon) {
+        setUpButton(buttons[x][y]);
+        if(game.getCellSymbol(x,y) == 'X'){
+            buttons[x][y].setIcon(mineIcon);
+        }
+        else if(game.getCellSymbol(x,y) != '0') {
+            buttons[x][y].setText(Character.toString(game.getCellSymbol(x, y)));
+            buttons[x][y].setForeground(NUMBER);
+        }
+        else {
+            //Cell is empty do not display 0.
+        }
+    }
+
+    /**
+     * Get the Grid object (the game itself)
+     * @return the underlying Grid object (the game)
+     */
+    public Grid getGrid(){
+        return game;
     }
 
     /**
@@ -125,67 +210,12 @@ public class GameFrame extends JFrame {
     }
 
     /**
-     * helper function for adding scores to database
-     * @param name name of user
-     * @param time how long it took the user to win
-     */
-    public void saveHighest(String name, int time) {
-	DBConnector.addScore(name, time, game.getDifficulty().ordinal());
-    }
-
-    /**
-     * Initializes toolbar at the top of the screen
-     * @param toolbar toolbar to be initialized
-     */
-    public void createToolbar(JToolBar toolbar) {
-	//make buttons
-	refresh = new JButton("Reset Game");
-	mainMenu = new JButton("Main Menu");
-	quitMine = new JButton("Quit Minesweeper");
-	inGameHelp = new JButton("Help");
-	flagBtn = new JButton("Flag"); //new ImageIcon("resource/images/flag.png"));
-	timeDisplay = new JTextField(game.getGameTime());
-	timeDisplay.setColumns(4);
-	timeDisplay.setEditable(false);
-	Timer t = new Timer(); //It refreshes the timeDisplay every second.
-	t.schedule(new TimerTask() {
-		@Override
-		public void run() {
-		    timeDisplay.setText(Integer.toString(game.getGameTime()));
-		}
-	    }, 0, 1);
-	refresh.addActionListener((ActionEvent e)-> {
-		if (MineGUI.overwriteSavePrompt()) {
-		    resetGame();
-		}
-	    });
-	mainMenu.addActionListener((ActionEvent e) -> {
-		game.save();
-		MineGUI.goToMainMenu();
-	    });
-	inGameHelp.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
-	quitMine.addActionListener((ActionEvent e) -> {
-		game.save();
-		MineGUI.quitPrompt();
-	    });
-	flagBtn.addActionListener((ActionEvent e) -> { flag(); });
-	toolbar.add(flagBtn);
-	toolbar.add(mainMenu);
-	toolbar.add(refresh);
-	toolbar.add(inGameHelp);
-	toolbar.add(quitMine);
-	toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	toolbar.add(timeDisplay);
-	toolbar.setFloatable(false);
-    }
-
-    /**
      * Get x coordinate of a given refresh button
      * used for GUITest to make Robot class move mouse button to correct coordinates
      * @return x coordinate of refresh button
      */
     public int getRefreshX() {
-	return refresh.getX();
+        return refresh.getX();
     }
 
     /**
@@ -194,7 +224,7 @@ public class GameFrame extends JFrame {
      * @return y coordinate of refresh button
      */
     public int getRefreshY() {
-	return refresh.getY();
+        return refresh.getY();
     }
 
     /**
@@ -203,7 +233,7 @@ public class GameFrame extends JFrame {
      * @return x coordinate of flag button
      */
     public int getFlagBtnX() {
-	return flagBtn.getX();
+        return flagBtn.getX();
     }
 
     /**
@@ -212,7 +242,7 @@ public class GameFrame extends JFrame {
      * @return y coordinate of flag button
      */
     public int getFlagBtnY() {
-	return flagBtn.getY();
+        return flagBtn.getY();
     }
 
     /**
@@ -221,7 +251,7 @@ public class GameFrame extends JFrame {
      * @return x coordinate of main menu button
      */
     public int getMainMenuX() {
-	return mainMenu.getX();
+        return mainMenu.getX();
     }
 
     /**
@@ -230,7 +260,7 @@ public class GameFrame extends JFrame {
      * @return y coordinate of main menu button
      */
     public int getMainMenuY() {
-	return mainMenu.getY();
+        return mainMenu.getY();
     }
 
     /**
@@ -239,7 +269,7 @@ public class GameFrame extends JFrame {
      * @return x coordinate of help button
      */
     public int getHelpX() {
-	return inGameHelp.getX();
+        return inGameHelp.getX();
     }
 
     /**
@@ -248,7 +278,7 @@ public class GameFrame extends JFrame {
      * @return y coordinate of help button
      */
     public int getHelpY() {
-	return inGameHelp.getY();
+        return inGameHelp.getY();
     }
 
     /**
@@ -260,11 +290,20 @@ public class GameFrame extends JFrame {
     }
 
     /**
+     * PreCondition: buttons at [x][y] is flagged.
+     * Deflags a button and removes flag image.
+     * @param x
+     * @param y
+     */
+    private void deflagCell(int x, int y) {
+        game.deflagBox(x,y);
+        buttons[x][y].setIcon(null);
+    }
+
+    /**
      * plays a sound from the resources
      * @param dir name of the sound file to be played
      */
-   
-    
     public void playSound(String dir) {
 	if (dir != null) {
 	    try {
@@ -278,6 +317,7 @@ public class GameFrame extends JFrame {
 		  AudioFormat format = audioInputStream.getFormat();
           DataLine.Info info= new DataLine.Info(Clip.class,format);
           Clip clip = (Clip) AudioSystem.getLine(info);
+          //When the Clip stops playing a sound it needs to be closed.
           clip.addLineListener(e -> {
               if (e.getType() == LineEvent.Type.STOP) {
                   clip.close();
@@ -288,7 +328,6 @@ public class GameFrame extends JFrame {
           audioInputStream.close();
 
 	    }
-	 
 	    catch (UnsupportedAudioFileException|LineUnavailableException| IOException e) {
 		e.printStackTrace();
 	    }
@@ -296,8 +335,12 @@ public class GameFrame extends JFrame {
 	}
     }
 
-
-    public ImageIcon getImageIcon(String resource) {
+    /**
+     * Loads specified image located in resources folder.
+     * @param resource Path of the image (excluding "resources/")
+     * @return ImageIcon containing the image.
+     */
+    private ImageIcon getImageIcon(String resource) {
 	File local = new File("resources/" + resource);
 	ImageIcon icon;
 	if (local.exists()) {
@@ -312,79 +355,103 @@ public class GameFrame extends JFrame {
     }
 
     /**
-     * Refreshed the grid to coincide with the game
+     * restores the previous state of a game loaded from save file.
      */
-
-    public void refresh() {
-	int fontSize = buttons[0][0].getSize().height / 2;
-	if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
-	    fontSize = buttons[0][0].getSize().width / 4;
-	}
-	for(int x=0; x<=Grid.getVisibleSize(); x++){
-	    game.incrementCorrectMoves();
-	    Dimension cor = Grid.getCellCor(x);
-	    int i = (int) cor.getWidth();
-	    int j = (int) cor.getHeight();
-        buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
-        buttons[i][j].setBackground(Grey);
-        if(game.getCell(i,j) != '0') {
-            buttons[i][j].setForeground(NUMBER);
-            buttons[i][j].setText(Character.toString(game.getCell(i, j)));
+    private void reload(){
+        for(int x=0; x<game.getSize();x++){
+            for(int y=0; y<game.getSize();y++){
+                if(game.isOpen(x,y)){
+                    updateSingleCell(x,y,null);
+                }
+            }
         }
-    }
-    for (int x=0; x<=Grid.getVisibleSize(); x++){
-	    Grid.removeCellCor(x);
-    }
     }
 
     /**
-     * Get the Grid object (the game itself)
-     * @return the underlying Grid object (the game)
+     * Refreshes the grid to coincide with the game
      */
-    public Grid getGrid(){
-	return game;
+    private void refresh() {
+	    for(int x=0; x< game.getVisibleSize(); x++){
+            Dimension cor = game.getCellCor(x);
+            int i = (int) cor.getWidth();
+            int j = (int) cor.getHeight();
+            setUpButton(buttons[i][j]);
+            if(game.getCellSymbol(i,j) != '0') {
+                buttons[i][j].setForeground(NUMBER);
+                buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
+            }
+            game.incrementCorrectMoves();
+        }
+        game.removeAllVisible();
     }
+    /**
+     * Reveals all the cells in the game.
+     */
+    public void revealAll(){
+        ImageIcon mineIcon= getImageIcon("/images/mine.jpg");
+        for(int x=0; x<game.getSize();x++){
+            for(int y=0; y<game.getSize();y++){
+                if(game.isMine(x,y)){
+                    updateSingleCell(x,y,mineIcon);
+                }
+                else if(!game.isOpen(x,y) || game.isFlag(x,y)){
+                    if (game.isFlag(x,y)){
+                        deflagCell(x,y);
+                    }
+                    updateSingleCell(x,y,null);
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Reset the game with the same difficulty
      */
-    public void resetGame() {
+    private void resetGame() {
 	MineGUI.newGame(game.getDifficulty());
     }
+
+    /**
+     * helper function for adding scores to database
+     * @param name name of user
+     * @param time how long it took the user to win
+     */
+    private void saveHighest(String name, int time) {
+        DBConnector.addScore(name, time, game.getDifficulty().ordinal());
+    }
+
 
     /**
      * inner class, reponds to resizing of component to resize font
      */
     class SizeListener implements ComponentListener {
-
 	@Override
 	public void componentHidden(ComponentEvent e) {
 	}
-
 	@Override
 	public void componentMoved(ComponentEvent e) {
 	}
-
 	/**
 	 * refresh the screen when resizing the frame
 	 * @param e the ComponentEvent object (not used)
 	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
-	    refresh();
+	    //refresh();
 	}
 
 	@Override
 	public void componentShown(ComponentEvent e) {
 	    // TODO Auto-generated method stub
-	}
-    } // class SizeListener
+	    }
+    }
 
     /**
      * Inner Class, responds to the event source.
      */
     class ButtonListener extends MouseAdapter {
-
         private int row;
         private int col;
 
@@ -399,21 +466,38 @@ public class GameFrame extends JFrame {
             row = i;
             col = j;
         }
-
-        public void updateSingleCell(int x, int y, ImageIcon mineIcon) {
-            if(game.getCell(x,y) == 'X'){
-                buttons[x][y].setIcon(mineIcon);
+        /**
+         * Dialog that displays a congratulatory message and asks the user for input.
+         * @param database
+         */
+        public void gameWonPrompt(boolean database) {
+            if (database) {
+                String user = JOptionPane.showInputDialog(null, "You win! Enter your name for the leaderboard.", "Victory!", JOptionPane.QUESTION_MESSAGE);
+                if (user != null) {
+                    saveHighest(user, game.getGameTime());
+                }
             }
-            else if(game.getCell(x,y) != '0') {
-
-                buttons[x][y].setBackground(Grey);
-                buttons[x][y].setText(Character.toString(game.getCell(x, y)));
-                buttons[x][y].setForeground(NUMBER);
+            int response = JOptionPane.showOptionDialog(null, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
+            if (response == JOptionPane.YES_OPTION) {
+                MineGUI.goToMainMenu();
+            } else if (response == JOptionPane.INFORMATION_MESSAGE) {
+                resetGame();
+            } else {
+                //do nothing
             }
-            else {
-                buttons[x][y].setBackground(Grey);
+        }
+        /**
+         * Dialog that informs the user of defeat. Requests the user to either reset game or to go back to main menu.
+         */
+        public void gameLost() {
+            revealAll();
+            int response = JOptionPane.showOptionDialog(null, "You lose! Press 'Reset Game' to start a new game.", "Defeat!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
+            if (response == JOptionPane.YES_OPTION) {
+                MineGUI.goToMainMenu();
             }
-
+            else{
+                resetGame();
+            }
         }
 
         public String getSound(MouseEvent event) {
@@ -447,9 +531,6 @@ public class GameFrame extends JFrame {
 
         }
 
-        //public void gameOver() {
-       // }
-
         /**
          * Places player's symbol on button, checks for a winner or tie
          *
@@ -482,8 +563,7 @@ public class GameFrame extends JFrame {
                 } else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
                     // If you right click or have flag button selected
                     if (game.isFlag(row, col)) {
-                        game.deflagBox(row, col);
-                        buttons[row][col].setIcon(null);
+                        deflagCell(row,col);
                     } else if (!game.isOpen(row, col)) {
                         soundName = "/sounds/place_flag.wav";
                         game.flagBox(row, col);
@@ -496,7 +576,7 @@ public class GameFrame extends JFrame {
                 } else if (event.getButton() == MouseEvent.BUTTON2) {
                     if (game.searchSurrounding(row, col)) {
                         soundName = "/sounds/clicked.wav";
-                        refresh();
+                        //refresh();
                     } else {
                         soundName = "/sounds/userError.wav";
                     }
@@ -510,51 +590,13 @@ public class GameFrame extends JFrame {
             }
         } // class ButtonListener
 
-        public void gameLost() {
-            revealAll();
-            int response = JOptionPane.showOptionDialog(null, "You lose! Press 'Reset Game' to start a new game.", "Defeat!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
-            if (response == JOptionPane.YES_OPTION) {
-                MineGUI.goToMainMenu();
-            }
-            else{
-                resetGame();
-            }
-        }
 
-        public void gameWonPrompt(boolean database) {
-            if (database) {
-                String user = JOptionPane.showInputDialog(null, "You win! Enter your name for the leaderboard.", "Victory!", JOptionPane.QUESTION_MESSAGE);
-                if (user != null) {
-                    saveHighest(user, game.getGameTime());
-                }
-            }
-            int response = JOptionPane.showOptionDialog(null, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Main Menu", "Reset Game"}, "default");
-            if (response == JOptionPane.YES_OPTION) {
-                MineGUI.goToMainMenu();
-            } else if (response == JOptionPane.INFORMATION_MESSAGE) {
-                resetGame();
-            } else {
-                //do nothing
-            }
-        }
-        public void revealAll(){
-            ImageIcon mineIcon= getImageIcon("/images/mine.jpg");
-            for(int x=0; x<game.getSize();x++){
-                for(int y=0; y<game.getSize();y++){
-                   if(!game.isOpen(x,y) || game.isFlag(x,y)){
-                       updateSingleCell(x,y,null);
-                    }
-                    else if(game.isMine(x,y)){
-                       updateSingleCell(x,y,mineIcon);
-                   }
-
-                }
-            }
-        }
     }
 
 
 }
+
+
 /*
 	for (int i = 0; i < game.getSize(); i++) {
 	    for (int j = 0; j < game.getSize(); j++) {
@@ -565,11 +607,11 @@ public class GameFrame extends JFrame {
 			buttons[i][j].setIcon(theMine);
 		    } else {
                 buttons[i][j].setBackground(Grey);
-			if (game.getCell(i, j) == '0') {
+			if (game.getCellSymbol(i, j) == '0') {
 			    buttons[i][j].setForeground(ZERO);
 			} else {
 			    buttons[i][j].setForeground(NUMBER);
-				buttons[i][j].setText(Character.toString(game.getCell(i, j)));
+				buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
 			}
 
 		    }
