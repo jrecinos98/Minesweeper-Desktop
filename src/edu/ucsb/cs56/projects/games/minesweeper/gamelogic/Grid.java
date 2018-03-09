@@ -39,7 +39,7 @@ public class Grid implements Serializable{
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
 	private int correctMoves;
-	private transient ArrayList<Dimension> visibleCells;
+	private transient ArrayList<Dimension> makeVisible;
 
 	/**
 	 * Default constructor for objects of class GUIGrid
@@ -57,32 +57,26 @@ public class Grid implements Serializable{
 		this.difficulty = difficulty;
 		correctMoves = 0;
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
-		visibleCells = new ArrayList<Dimension>();
+		makeVisible = new ArrayList<Dimension>();
 		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
 		startTimer();
 	}
-	public int getVisibleSize(){return visibleCells.size() ;}
-	public Dimension getCellCor(int x){
-        Dimension last= visibleCells.get(x);
-        Dimension lastVisible= new Dimension((int)last.getWidth(),(int)last.getHeight());
-        return lastVisible;
-    }
-    public void removeAllVisible()
-	{
-		visibleCells.clear();
-    }
-    public void addVisibleCell(int row, int column){
-	    Dimension last= new Dimension(row,column);
-	    visibleCells.add(last);
-    }
-	public void incrementCorrectMoves(){
-	    correctMoves++;
-    }
-    public void decrementCorrectMoves(){
-	    correctMoves--;
+
+
+    /**
+     * Prepares a test grid if the difficulty is TEST.
+     * @param grid CellComponent[][] containing all the cells.
+     */
+    private void prepareTest(GridComponent[][] grid) {
+        grid[3][3].makeMine();
+        for (int i = 2; i <= 3; i++) {
+            for (int j = 2; j <= 3; j++) {
+                grid[i][j].iterate();
+            }
+        }
     }
 
     /**
@@ -109,7 +103,6 @@ public class Grid implements Serializable{
 
         }
     }
-
     /**
      * Finds all the bombs around a given cell.
      * @param cells GridComponent[][] containing all the cells.
@@ -148,18 +141,173 @@ public class Grid implements Serializable{
 
     }
 
+
     /**
-     * Prepares a test grid if the difficulty is TEST.
-     * @param grid CellComponent[][] containing all the cells.
+     * Checks a cell to see if it has been opened
+     * @param i row of box cell
+     * @param j column of box cell
+     * @return boolean indicating whether the cell has been opened or not
      */
-	private void prepareTest(GridComponent[][] grid) {
-        grid[3][3].makeMine();
-        for (int i = 2; i <= 3; i++) {
-            for (int j = 2; j <= 3; j++) {
-                grid[i][j].iterate();
+    public boolean isOpen(int i, int j) throws IllegalArgumentException {
+        if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
+            return grid[i][j].getIsOpen();
+        } else {
+            throw new IllegalArgumentException("I don't know where this exists :(");
+        }
+    }
+
+    /**
+     * Checks a cell to see if there is a mine underneath
+     * @param i row of box cell
+     * @param j column of box cell
+     * @return a boolean indicating whether the spot is a mine or not
+     */
+    public boolean isMine(int i, int j) throws IllegalArgumentException {
+        if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
+            return grid[i][j].getIsMine();
+        } else {
+            throw new IllegalArgumentException("I don't know where this exists :(");
+        }
+    }
+
+    /**
+     * Check to see if a user placed a flag on that cell
+     * @param i row of box cell
+     * @param j column of box cell
+     * @return a boolean indicating whether a spot has been flagged or not
+     */
+    public boolean isFlag(int i, int j) throws IllegalArgumentException {
+        if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
+            return grid[i][j].getIsFlagged();
+        } else {
+            throw new IllegalArgumentException("I don't know where this exists :(");
+        }
+    }
+
+    /**
+     * Get the state of the game
+     * @return the gamestate as an enum from Constants.GameState
+     */
+    public Constants.GameState getGameState() {
+        return gameState;
+    }
+
+    public GridComponent getCell(int x, int y){
+        return grid[x][y];
+    }
+
+    /**
+     * Get the symbol of a cell
+     * @param i row of box cell
+     * @param j column of box cell
+     * @return the symbol of the cell
+     */
+    public char getCellSymbol(int i, int j) {
+        return grid[i][j].getSymbol();
+    }
+
+    /**
+     * get the grid ad a 2D array of chars
+     * @return 2D array of chars where each entry represents the symbol of that cell
+     */
+    public char[][] getG() {
+        char[][] g = new char[grid.length][grid.length];
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g.length; j++) {
+                g[i][j] = grid[i][j].getSymbol();
+            }
+        }
+        return g;
+    }
+
+    /**
+     * Returns the size of the makeVisible.
+     * @return
+     */
+    public int getVisibleSize(){return makeVisible.size() ;}
+
+    /**
+     * Returns Dimension object containing x and y coordinates of a cell that needs to be refreshed.
+     * @param x Location in make
+     * @return
+     */
+	public Dimension getCellCor(int x){
+        return makeVisible.get(x);
+    }
+
+    /**
+     * Clears all the Dimensions in makeVisible.
+     */
+    public void removeAllVisible()
+	{
+		makeVisible.clear();
+    }
+
+    /**
+     * Adds a Dimension object to makeVisible using the coordinates
+     * @param x xCor
+     * @param y yCor
+     */
+    public void addVisibleCell(int x, int y){
+	    Dimension last= new Dimension(x,y);
+	    makeVisible.add(last);
+    }
+
+    /**
+     * Adds one to correctMoves
+     */
+    public void incrementCorrectMoves(){
+	    correctMoves++;
+    }
+
+    /**
+     * Subtracts one from correctMoves
+     */
+    public void decrementCorrectMoves(){
+	    correctMoves--;
+    }
+
+
+
+    /**
+     * Places a flag on the cell
+     * @param i row of box cell
+     * @param j column of box cell
+     */
+    public void flagBox(int i, int j) {
+        if (grid[i][j].getIsFlagged()) {
+            //System.out.println("This box is already flagged!");
+        } else if (grid[i][j].getIsFlagged()) {
+            //System.out.println("You cannot put a flag on an opened box!");
+        } else {
+            // TODO: places 'F' only after a left click on a nonflag occurs?
+            grid[i][j].setFlagged(true);
+            if (grid[i][j].getIsMine()) {
+                incrementCorrectMoves();
+                if (correctMoves >= grid.length * grid.length) {
+                    gameState = Constants.GameState.WON;
+                    endGame();
+                }
             }
         }
     }
+
+    /**
+     * Removes a flag on a cell that has one
+     * @param i row of box cell
+     * @param j column of box cell
+     */
+    public void deflagBox(int i, int j) {
+        if (!grid[i][j].getIsFlagged()) {
+            //System.out.println("That box does not have a flag on it!");
+        } else {
+            grid[i][j].setFlagged(false);
+            if (grid[i][j].getIsMine()) {
+                decrementCorrectMoves();
+            }
+        }
+    }
+
 
 	/**
 	 * Delete the current save file
@@ -218,7 +366,128 @@ public class Grid implements Serializable{
 		return difficulty;
 	}
 
-	/**
+    /**
+     * Returns the grid from the user's previous game
+     * @throws IOException if no save file
+     * @throws ClassNotFoundException if no save file
+     * @return the Grid object with the previous game's data
+     */
+    public static Grid loadGame() throws IOException, ClassNotFoundException {
+        FileInputStream fileStream = new FileInputStream("MyGame.ser");
+        ObjectInputStream os = new ObjectInputStream(fileStream);
+        Object one;
+        one = os.readObject();
+        os.close();
+        Grid g = (Grid) one;
+        g.startTimer();
+        return g;
+    }
+
+    /**
+     * Checks whether a save file exists.
+     * @return true if save file exists and false otherwise
+     */
+    public static boolean saveExist(){
+
+        if (new File("MyGame.ser").isFile()){
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * Saves the current game (this) into a serialized file
+     */
+    public void save() {
+        try {
+            FileOutputStream fileStream = new FileOutputStream("MyGame.ser");
+            ObjectOutputStream os = new ObjectOutputStream(fileStream);
+            os.writeObject(this);
+            os.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens the cell and returns what will be placed there
+     * @param i row of box cell
+     * @param j column of box cell
+     * @return a the symbol of the cell that was just opened or 'e' if not opened
+     */
+    public char searchBox(int i, int j) {
+        char currentCell = 'e';
+        if (!grid[i][j].getIsOpen() && !grid[i][j].getIsFlagged() ){
+            currentCell = grid[i][j].getSymbol();
+            grid[i][j].open();
+            if (grid[i][j].getIsMine()) {
+                gameState = Constants.GameState.LOST;
+                endGame();
+            } else {
+                if (currentCell == '0') {
+                    PathFinder.findCellsToOpen(i, j,this);
+                }
+                else{
+                    incrementCorrectMoves();
+                    if (correctMoves >= grid.length * grid.length) {
+                        gameState = Constants.GameState.WON;
+                        endGame();
+                    }
+
+                }
+
+            }
+        }
+
+        return currentCell;
+    }
+    /**
+     * Open the cell and all surrounding cells
+     * @param row row of box cell
+     * @param col column of box cell
+     * Will only work if the correct number of flags are adjacent to the space being clicked on
+     * @return boolean indicating whether the move was allowed or not
+     */
+    public boolean searchSurrounding(int row, int col) {
+        int numFlags = 0;
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
+                    if (grid[i][j].getIsFlagged()) {
+                        numFlags++;
+                    }
+                }
+            }
+        }
+        if (Integer.toString(numFlags).equals(Character.toString(grid[row][col].getSymbol())) && !grid[row][col].getIsFlagged()) {
+            for (int i = row - 1; i <= row + 1; i++) {
+                for (int j = col - 1; j <= col + 1; j++) {
+                    if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
+                        System.out.println("InSearchSurrounding");
+                        searchBox(i, j);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Display where all the mines were after a user lost
+     */
+    public void exposeMines() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                if (grid[i][j].getIsMine()) {
+                    grid[i][j].open();
+                }
+            }
+        }
+    }
+
+    /**
 	 * Prints out the game
 	 * Used for the text game
 	 * @return a text display of the current game
@@ -276,244 +545,6 @@ public class Grid implements Serializable{
 			game += "\n";
 		}
 		return game;
-	}
-
-	/**
-	 * Checks a cell to see if it has been opened
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 * @return boolean indicating whether the cell has been opened or not
-	 */
-	public boolean isOpen(int i, int j) throws IllegalArgumentException {
-		if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
-			return grid[i][j].getIsOpen();
-		} else {
-			throw new IllegalArgumentException("I don't know where this exists :(");
-		}
-	}
-
-	/**
-	 * Checks a cell to see if there is a mine underneath
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 * @return a boolean indicating whether the spot is a mine or not
-	 */
-	public boolean isMine(int i, int j) throws IllegalArgumentException {
-		if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
-			return grid[i][j].getIsMine();
-		} else {
-			throw new IllegalArgumentException("I don't know where this exists :(");
-		}
-	}
-
-	/**
-	 * Check to see if a user placed a flag on that cell
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 * @return a boolean indicating whether a spot has been flagged or not
-	 */
-	public boolean isFlag(int i, int j) throws IllegalArgumentException {
-		if (i >= 0 && i < grid.length && j >= 0 && j < grid.length) {
-			return grid[i][j].getIsFlagged();
-		} else {
-			throw new IllegalArgumentException("I don't know where this exists :(");
-		}
-	}
-
-	/**
-	 * Opens the cell and returns what will be placed there
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 * @return a the symbol of the cell that was just opened or 'e' if not opened
-	 */
-	public char searchBox(int i, int j) {
-		char currentCell = 'e';
-		if (!grid[i][j].getIsOpen() && !grid[i][j].getIsFlagged() ){
-				currentCell = grid[i][j].getSymbol();
-                grid[i][j].open();
-				if (grid[i][j].getIsMine()) {
-					gameState = Constants.GameState.LOST;
-					endGame();
-				} else {
-                    if (currentCell == '0') {
-                        PathFinder.findEmpty(i, j,this);
-                    }
-                    else{
-                        incrementCorrectMoves();
-                        if (correctMoves >= grid.length * grid.length) {
-                            gameState = Constants.GameState.WON;
-                            endGame();
-                        }
-
-                    }
-
-				}
-			}
-
-		return currentCell;
-	}
-
-	/**
-	 * Places a flag on the cell
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 */
-	public void flagBox(int i, int j) {
-		if (grid[i][j].getIsFlagged()) {
-			//System.out.println("This box is already flagged!");
-		} else if (grid[i][j].getIsFlagged()) {
-			//System.out.println("You cannot put a flag on an opened box!");
-		} else {
-			// TODO: places 'F' only after a left click on a nonflag occurs?
-			grid[i][j].setFlagged(true);
-			if (grid[i][j].getIsMine()) {
-				incrementCorrectMoves();
-				if (correctMoves >= grid.length * grid.length) { 
-					gameState = Constants.GameState.WON;
-					endGame();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Removes a flag on a cell that has one
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 */
-	public void deflagBox(int i, int j) {
-		if (!grid[i][j].getIsFlagged()) {
-			//System.out.println("That box does not have a flag on it!");
-		} else {
-			grid[i][j].setFlagged(false);
-			if (grid[i][j].getIsMine()) {
-				decrementCorrectMoves();
-			}
-		}
-	}
-
-	/**
-	 * Display where all the mines were after a user lost
-	 */
-	public void exposeMines() {
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				if (grid[i][j].getIsMine()) {
-					grid[i][j].open();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get the state of the game
-	 * @return the gamestate as an enum from Constants.GameState
-	 */
-	public Constants.GameState getGameState() {
-		return gameState;
-	}
-
-	public GridComponent getCell(int x, int y){
-		return grid[x][y];
-	}
-
-	/**
-	 * Get the symbol of a cell
-	 * @param i row of box cell
-	 * @param j column of box cell
-	 * @return the symbol of the cell
-	 */
-	public char getCellSymbol(int i, int j) {
-		return grid[i][j].getSymbol();
-	}
-
-	/**
-	 * get the grid ad a 2D array of chars
-	 * @return 2D array of chars where each entry represents the symbol of that cell
-	 */
-	public char[][] getG() {
-		char[][] g = new char[grid.length][grid.length];
-		for (int i = 0; i < g.length; i++) {
-			for (int j = 0; j < g.length; j++) {
-				g[i][j] = grid[i][j].getSymbol();
-			}
-		}
-		return g;
-	}
-
-	/**
-	 * Open the cell and all surrounding cells
-	 * @param row row of box cell
-	 * @param col column of box cell
-	 * Will only work if the correct number of flags are adjacent to the space being clicked on
-	 * @return boolean indicating whether the move was allowed or not
-	 */
-	public boolean searchSurrounding(int row, int col) {
-		int numFlags = 0;
-		for (int i = row - 1; i <= row + 1; i++) {
-			for (int j = col - 1; j <= col + 1; j++) {
-				if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
-					if (grid[i][j].getIsFlagged()) {
-						numFlags++;
-					}
-				}
-			}
-		}
-		if (Integer.toString(numFlags).equals(Character.toString(grid[row][col].getSymbol())) && !grid[row][col].getIsFlagged()) {
-			for (int i = row - 1; i <= row + 1; i++) {
-				for (int j = col - 1; j <= col + 1; j++) {
-					if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
-						searchBox(i, j);
-					}
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns the grid from the user's previous game
-	 * @throws IOException if no save file
-	 * @throws ClassNotFoundException if no save file
-	 * @return the Grid object with the previous game's data
-	 */
-	public static Grid loadGame() throws IOException, ClassNotFoundException {
-		FileInputStream fileStream = new FileInputStream("MyGame.ser");
-		ObjectInputStream os = new ObjectInputStream(fileStream);
-		Object one;
-		one = os.readObject();
-		os.close();
-		Grid g = (Grid) one;
-		g.startTimer();
-		return g;
-	}
-
-	/**
-	 * Checks whether a save file exists.
-	 * @return true if save file exists and false otherwise
-	 */
-	public static boolean saveExist(){
-
-	    if (new File("MyGame.ser").isFile()){
-            return true;
-        }
-	    return false;
-
-	}
-
-	/**
-	 * Saves the current game (this) into a serialized file
-	 */
-	public void save() {
-		try {
-			FileOutputStream fileStream = new FileOutputStream("MyGame.ser");
-			ObjectOutputStream os = new ObjectOutputStream(fileStream);
-			os.writeObject(this);
-			os.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	/**

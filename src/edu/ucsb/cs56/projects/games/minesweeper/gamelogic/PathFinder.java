@@ -1,26 +1,31 @@
 package edu.ucsb.cs56.projects.games.minesweeper.gamelogic;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
-
-import java.awt.*;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
+/**
+ * PathFinder is an abstract class with a single public method called findEmpty.
+ * findEmpty is used to find and open all the cells that should be revealed after the user clicks on an empty cell.
+ * The cell located in grid[row][col] must be empty (the cell symbol is '0'). This is pushed onto the stack, added to makeVisible and we search
+ * its neighboring cells. Any neighbor empty cells are pushed onto the stack and any cells containing a numerical value are opened added to makeVisible,
+ * but not pushed to the stack. Repeat until the stack is empty.
+ *
+ * @author Jose Recinos, Winter 2018.
+ */
 import java.util.Stack;
 
 
-public class PathFinder{
+public abstract class PathFinder{
     private static Stack<GridComponent> stack;
     /**
-     * Searches for all the cells that need to be visible.
-     * @param k Row of the current cell
-     * @param n Column of the current cell
-     * @param grid Grid object that contains all of the cells.
+     * Precondition: The cell at specified row and column must be an empty cell.
+     * PostCondition: The location of the cells that have been marked as open have been added to
+     * the array of visible cells in the grid.
+     * @param row Row of the current cell
+     * @param col Column of the current cell
+     * @param grid Grid object that contains all of the cells in the current game.
      */
-    public static void findEmpty(int k, int n, Grid grid){
-        stackPush(grid.getCell(k,n));
+    public static void findCellsToOpen(int row, int col, Grid grid){
+        stackPush(grid.getCell(row,col));
         GridComponent temp;
-        //System.out.println("X:"+k+ "  Y:"+n);
         while(!stack.empty()) {
             temp=stack.pop();
             temp.open();
@@ -73,6 +78,7 @@ public class PathFinder{
         }
         stack.push(grid);
     }
+
 
     /*
             if (k - 1 >= 0) {

@@ -34,21 +34,41 @@ public class GridComponent implements Serializable {
 			symbol++;
 		}
 	}
+
+	/**
+	 * sets the xCor of cell on the grid
+	 * @param x
+	 */
 	public void setXCor(int x){
 	    xCor=x;
     }
+
+    /**
+     * sets the yCor of cell on the grid
+     * @param y
+     */
     public void setYCor(int y){
 	    yCor=y;
     }
+
+    /**
+     *returns xCor
+     * @return
+     */
     public int getX(){
 	    return xCor;
     }
+
+    /**
+     * return yCor
+     * @return
+     */
     public int getY(){
 	    return yCor;
     }
 	/**
 	 * Make this cell a mine
-	 * Won;t work if already a mine
+	 * Won't work if already a mine
 	 * @return boolean indicating whether the function was successful
 	 */
 	public boolean makeMine() {
@@ -96,7 +116,7 @@ public class GridComponent implements Serializable {
 		return isFlagged;
 	}
     /**
-     *
+     *If the cell is flagged or open then return true (meaning it has been traversed before). Else return false.
      */
     public boolean getIsMarked(){
         if (getIsFlagged() || getIsOpen()){
