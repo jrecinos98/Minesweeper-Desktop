@@ -39,7 +39,7 @@ public class Grid implements Serializable{
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
 	private int correctMoves;
-	private transient ArrayList<Dimension> makeVisible;
+	private ArrayList<Dimension> makeVisible;
 
 	/**
 	 * Default constructor for objects of class GUIGrid

@@ -25,7 +25,6 @@ import java.awt.event.*;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
-
 /**
  * Main Menu JFrame
  * @author Ryan Wiener

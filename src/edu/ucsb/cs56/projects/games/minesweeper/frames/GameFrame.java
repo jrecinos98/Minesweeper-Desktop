@@ -54,16 +54,18 @@ public class GameFrame extends JFrame {
      */
     public GameFrame(Constants.Difficulty difficulty) throws IOException, ClassNotFoundException {
         Constants.Difficulty gameDifficulty = difficulty;
+        boolean gameReload;
         if (gameDifficulty == Constants.Difficulty.LOAD) {
             game = Grid.loadGame();
+            gameReload=true;
             gameDifficulty = game.getDifficulty();
+        }
+        else{
+            gameReload = false;
+            game = new Grid(gameDifficulty);
         }
         setWindowSize(this, gameDifficulty);
         MineGUI.centerWindow(this);
-        if (game == null) {
-            game = new Grid(gameDifficulty);
-        }
-
         JToolBar toolbar = new JToolBar("In-game toolbar");
         createToolbar(toolbar);//Function declared below
         getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
@@ -75,12 +77,10 @@ public class GameFrame extends JFrame {
             buttons[i][j] = new JButton();
             buttons[i][j].setBackground(Unpressed);
             buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
-            buttons[i][j].setFont(new Font("sansserif", Font.BOLD, 10));
-            buttons[i][j].setIcon(null);
             grid.add(buttons[i][j]);
             }
         }
-        if (gameDifficulty == Constants.Difficulty.LOAD) {
+        if (gameReload){
             reload();
         }
         getContentPane().add(grid);
@@ -362,11 +362,24 @@ public class GameFrame extends JFrame {
     /**
      * restores the previous state of a game loaded from save file.
      */
-    private void reload(){
-        for(int x=0; x<game.getSize();x++){
-            for(int y=0; y<game.getSize();y++){
-                if(game.isOpen(x,y)){
-                    updateSingleCell(x,y,null);
+    private void reload() {
+        for (int i = 0; i < game.getSize(); i++) {
+            for (int j = 0; j < game.getSize(); j++) {
+                if (game.isOpen(i, j)) {
+                    buttons[i][j].setBackground(Grey);
+                    if (game.isMine(i, j)) {
+
+                    } else {
+                        if (game.getCellSymbol(i, j) != '0') {
+                            buttons[i][j].setForeground(NUMBER);
+                            buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
+                        }
+                    }
+                } else if (game.isFlag(i, j)) {
+                    buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
+                } else {
+                    buttons[i][j].setIcon(null);
+                    buttons[i][j].setText("");
                 }
             }
         }
@@ -380,11 +393,7 @@ public class GameFrame extends JFrame {
             Dimension cor = game.getCellCor(x);
             int i = (int) cor.getWidth();
             int j = (int) cor.getHeight();
-            setUpButton(buttons[i][j]);
-            if(game.getCellSymbol(i,j) != '0') {
-                buttons[i][j].setForeground(NUMBER);
-                buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
-            }
+            updateSingleCell(i,j,null);
             game.incrementCorrectMoves();
         }
         game.removeAllVisible();
@@ -427,7 +436,7 @@ public class GameFrame extends JFrame {
      * Reset the game with the same difficulty
      */
     private void resetGame() {
-	MineGUI.newGame(game.getDifficulty());
+	    MineGUI.newGame(game.getDifficulty());
     }
     /**
      * Dialog that displays a congratulatory message and asks the user for input.
@@ -573,29 +582,3 @@ public class GameFrame extends JFrame {
 }
 
 
-/*
-	for (int i = 0; i < game.getSize(); i++) {
-	    for (int j = 0; j < game.getSize(); j++) {
-		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
-		if (game.isOpen(i, j)) {
-		    if (game.isMine(i, j)) {
-
-			buttons[i][j].setIcon(theMine);
-		    } else {
-                buttons[i][j].setBackground(Grey);
-			if (game.getCellSymbol(i, j) == '0') {
-			    buttons[i][j].setForeground(ZERO);
-			} else {
-			    buttons[i][j].setForeground(NUMBER);
-				buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
-			}
-
-		    }
-		} else if (game.isFlag(i, j)) {
-		    buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
-		} else {
-		    buttons[i][j].setIcon(null);
-		    buttons[i][j].setText("");
-		}
-	    }
-	}*/

@@ -38,12 +38,9 @@ public class MineGUI {
 	 */
 	public static void main (String[] args) {
 	    DBConnector.init();
-	    //MainMenu centered by constructor.
 	    mainMenu = new MainMenu();
-	    helpScreen = new HelpScreen();
-	    centerWindow(helpScreen);
-	    leaderboardFrame = new LeaderboardFrame();
-	    centerWindow(leaderboardFrame);
+        helpScreen= new HelpScreen();
+        leaderboardFrame = new LeaderboardFrame();
 	}
 
 	/**

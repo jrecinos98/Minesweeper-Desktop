@@ -1,6 +1,8 @@
 package edu.ucsb.cs56.projects.games.minesweeper.gamelogic;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
+import java.util.Stack;
+
 /**
  * PathFinder is an abstract class with a single public method called findEmpty.
  * findEmpty is used to find and open all the cells that should be revealed after the user clicks on an empty cell.
@@ -10,9 +12,6 @@ import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
  *
  * @author Jose Recinos, Winter 2018.
  */
-import java.util.Stack;
-
-
 public abstract class PathFinder{
     private static Stack<GridComponent> stack;
     /**
@@ -72,63 +71,11 @@ public abstract class PathFinder{
         }
 
     }
-    private static void stackPush(GridComponent grid){
+    private static void stackPush(GridComponent cell){
         if(stack == null) {
             stack = new Stack<GridComponent>();
         }
-        stack.push(grid);
+        stack.push(cell);
     }
 
-
-    /*
-            if (k - 1 >= 0) {
-                if (!cell[k - 1][n].getIsMarked()) {
-                    if ((cell[k - 1][n].getSymbol()) == empty) {
-                        findEmpty(k - 1, n, cell);
-                    } else {
-                        cell[k - 1][n].open();
-                        Grid.addVisibleCell(k - 1, n);
-                        Grid.incrementCorrectMoves();
-                    }
-
-                }
-            }
-            if (n - 1 >= 0) {
-                if (!cell[k][n - 1].getIsMarked()) {
-                    if ((cell[k][n - 1].getSymbol()) == empty) {
-                        findEmpty(k, n - 1, cell);
-                    } else {
-                        cell[k][n - 1].open();
-                        Grid.addVisibleCell(k, n - 1);
-                        Grid.incrementCorrectMoves();
-                    }
-
-
-                }
-            }
-            if (n + 1 <= cell[k].length - 1) {
-                if (!cell[k][n + 1].getIsMarked()) {
-                    if ((cell[k][n + 1].getSymbol()) == empty) {
-                        findEmpty(k, n + 1, cell);
-                    } else {
-                        cell[k][n + 1].open();
-                        Grid.addVisibleCell(k, n + 1);
-                        Grid.incrementCorrectMoves();
-                    }
-
-                }
-            }
-            if (k + 1 <= cell.length - 1) {
-                if (!cell[k + 1][n].getIsMarked()) {
-                    if ((cell[k + 1][n].getSymbol()) == empty) {
-                        findEmpty(k + 1, n, cell);
-                    } else {
-                        cell[k + 1][n].open();
-                        Grid.addVisibleCell(k + 1, n);
-                        Grid.incrementCorrectMoves();
-                    }
-
-
-                }
-            }*/
 }
