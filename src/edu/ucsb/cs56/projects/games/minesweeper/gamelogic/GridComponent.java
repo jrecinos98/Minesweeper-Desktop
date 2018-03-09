@@ -26,7 +26,7 @@ public class GridComponent implements Serializable {
 	}
 
 	/**
-	 * increment the symbol of the cell
+	 * increment the symbol of the cell.
 	 * Won't work if a mine
 	 */
 	public void iterate() {
@@ -34,6 +34,15 @@ public class GridComponent implements Serializable {
 			symbol++;
 		}
 	}
+
+    /**
+     * decrement the symbol of the cell.
+     */
+	public void decrement(){
+	    if(symbol != '0'){
+	        symbol--;
+        }
+    }
 
 	/**
 	 * sets the xCor of cell on the grid
@@ -141,6 +150,14 @@ public class GridComponent implements Serializable {
 	public char getSymbol() {
 		return symbol;
 	}
+
+    /**
+     * Changes the symbol of the cell
+     * @param symbol Symbol to be changed to.
+     */
+	public void setSymbol(char symbol){
+	    this.symbol=symbol;
+    }
 
 	/**
 	 * Get string representation of cell

@@ -5,6 +5,8 @@ import org.junit.Test;
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -56,6 +58,24 @@ public class GridTest {
 		}
 		assertEquals(36, count);
 	}
+
+
+	@Test
+    public void test_shuffleMine(){
+	    Grid test;
+	    int counter =0;
+	    while(counter < 100){
+	        test =  new Grid(Constants.Difficulty.LEGENDARY);
+            Random r= new Random();
+            int x= r.nextInt(test.getSize());
+            int y= r.nextInt(test.getSize());
+            if(test.getCellSymbol(x,y)=='X'){
+                test.shuffleMine(x,y);
+                assertEquals(true,test.getCellSymbol(x,y)=='0');
+                counter++;
+            }
+        }
+    }
 
 	/**
 	 * Test hard difficulty constructor of Grid class

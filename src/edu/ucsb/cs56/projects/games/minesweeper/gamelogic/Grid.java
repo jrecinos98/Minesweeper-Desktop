@@ -55,9 +55,11 @@ public class Grid implements Serializable{
 		deleteSave();
 		gameState = Constants.GameState.PLAYING;
 		this.difficulty = difficulty;
-		correctMoves = 0;
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
 		makeVisible = new ArrayList<Dimension>();
+		correctMoves=0;
+        //The number of bombs in the game.
+        //correctMoves = (int)((Math.sqrt(difficulty.ordinal())+ difficulty.ordinal()/2) *grid.length);
 		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
@@ -97,19 +99,36 @@ public class Grid implements Serializable{
             int y = random.nextInt(grid.length);
             if (!grid[x][y].getIsMine()){
                 grid[x][y].makeMine();
-                bombCounter(grid,x,y);
+                cellSymbolUpdate(x,y);
                 bombs--;
             }
 
         }
     }
+    public void shuffleMine(int x, int y){
+        System.out.println("Shuffle was called");
+        // This decrements the surrounding cells.
+        grid[x][y].setSymbol('0');
+        cellSymbolUpdate(x,y);
+        //update the current cell.
+        grid[x][y].setSymbol('/');
+        cellSymbolUpdate(x,y);
+        Random random = new Random();
+        int row= random.nextInt(grid.length);
+        int col= random.nextInt(grid.length);
+        while(!grid[row][col].getIsMine() && row!=x && col !=y){
+            //spawn mine at random place and update the surrounding cells.
+            grid[row][col].makeMine();
+            cellSymbolUpdate(row,col);
+        }
+
+    }
     /**
      * Finds all the bombs around a given cell.
-     * @param cells GridComponent[][] containing all the cells.
      * @param row The row that the cell is found in.
      * @param column The column where the cell is found in.
      */
-    private void bombCounter(GridComponent[][] cells, final int row, final int column){
+    private void cellSymbolUpdate(final int row, final int column){
         //If bomb is not on edge then use passed values.
         int xStart=row-1;
         int xEnd=row+1;
@@ -120,7 +139,7 @@ public class Grid implements Serializable{
             xStart=row;
         }
         //if the bomb is in the right edge.
-        else if(xEnd > cells.length-1){
+        else if(xEnd > grid.length-1){
             xEnd=row;
         }
         //if the bomb is in the top edge.
@@ -128,15 +147,29 @@ public class Grid implements Serializable{
             yStart=column;
         }
         //if the bomb is in the bottom edge.
-        else if(yEnd > cells[row].length-1){
+        else if(yEnd > grid[row].length-1){
             yEnd=column;
         }
+        char counter='0';
         for(int k=xStart; k<=xEnd; k++){
             for(int n=yStart; n<=yEnd; n++){
-                if(!cells[k][n].getIsMine()) {
-                    cells[k][n].iterate();
+                if(grid[k][n].getIsMine() && grid[row][column].getSymbol() == '/'){
+                    if (grid[k][n].getIsMine()){
+                        counter++;
+                    }
+                }
+                if(!grid[k][n].getIsMine()) {
+                    if(grid[row][column].getIsMine()){
+                        grid[k][n].iterate();
+                    }
+                    else if (grid[row][column].getSymbol() == '0'){
+                        grid[k][n].decrement();
+                    }
                 }
             }
+        }
+        if(grid[row][column].getSymbol() == '/'){
+            grid[row][column].setSymbol(counter);
         }
 
     }
@@ -303,7 +336,7 @@ public class Grid implements Serializable{
         } else {
             grid[i][j].setFlagged(false);
             if (grid[i][j].getIsMine()) {
-                decrementCorrectMoves();
+               decrementCorrectMoves();
             }
         }
     }

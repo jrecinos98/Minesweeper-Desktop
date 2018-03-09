@@ -45,6 +45,7 @@ public class GameFrame extends JFrame {
     private JPanel grid;
 	private Color Grey = new Color(180,180,180);
 	private Color Unpressed = new Color(158,158,158);
+	private boolean firstClick=false;
 
     /**
      * Constructs game from the given difficulty
@@ -538,6 +539,13 @@ public class GameFrame extends JFrame {
          */
         public void mouseReleased(MouseEvent event) {
             if (game.getGameState() == Constants.GameState.PLAYING) {
+                /*if(!firstClick && game.isMine(row,col)){
+                    firstClick=true;
+                    game.shuffleMine(row,col);
+                }
+                else if(!firstClick){
+                    firstClick=true;
+                }*/
                 if (event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(row, col) && !game.isOpen(row, col) && !flagBtn.isSelected()) {
                     //if you left click and the button is available (not a flag and not already opened)
                     char result = game.searchBox(row, col);
