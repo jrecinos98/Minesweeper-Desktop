@@ -323,7 +323,7 @@ public class Grid implements Serializable{
 	public void endGame() {
 		stopTimer();
 		deleteSave();
-		exposeMines();
+		//exposeMines();
 	}
 
 	/**
@@ -441,50 +441,6 @@ public class Grid implements Serializable{
         }
 
         return currentCell;
-    }
-    /**
-     * Open the cell and all surrounding cells
-     * @param row row of box cell
-     * @param col column of box cell
-     * Will only work if the correct number of flags are adjacent to the space being clicked on
-     * @return boolean indicating whether the move was allowed or not
-     */
-    public boolean searchSurrounding(int row, int col) {
-        int numFlags = 0;
-        for (int i = row - 1; i <= row + 1; i++) {
-            for (int j = col - 1; j <= col + 1; j++) {
-                if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
-                    if (grid[i][j].getIsFlagged()) {
-                        numFlags++;
-                    }
-                }
-            }
-        }
-        if (Integer.toString(numFlags).equals(Character.toString(grid[row][col].getSymbol())) && !grid[row][col].getIsFlagged()) {
-            for (int i = row - 1; i <= row + 1; i++) {
-                for (int j = col - 1; j <= col + 1; j++) {
-                    if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid.length)) {
-                        System.out.println("InSearchSurrounding");
-                        searchBox(i, j);
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Display where all the mines were after a user lost
-     */
-    public void exposeMines() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length; j++) {
-                if (grid[i][j].getIsMine()) {
-                    grid[i][j].open();
-                }
-            }
-        }
     }
 
     /**

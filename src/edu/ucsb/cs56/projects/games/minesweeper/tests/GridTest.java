@@ -17,27 +17,6 @@ import static org.junit.Assert.assertEquals;
 public class GridTest {
 
 	//Test is mine Exception.
-
-	/**
-	 * Test case for setZero method of the Grid class
-	 * @see Grid#setZero()
-	 */
-	@Test
-	public void test_setZero() {
-		boolean correct = true;
-		Grid test = new Grid();
-		test.setCells();
-		int s = test.getSize();
-		for (int i = 0; i < s; i++) {
-			for (int j = 0; j < s; j++) {
-				if (test.getG()[i][j] != '0') {
-					correct = false;
-				}
-			}
-		}
-		assertEquals(true, correct);
-	}
-
     //TestLoadGame
 
 	/**
@@ -75,11 +54,11 @@ public class GridTest {
 				}
 			}
 		}
-		assertEquals(30, count);
+		assertEquals(36, count);
 	}
 
 	/**
-	 * Test medium difficulty constructor of Grid class
+	 * Test hard difficulty constructor of Grid class
 	 * @see Grid#Grid(Constants.Difficulty)
 	 */
 	@Test
@@ -89,12 +68,66 @@ public class GridTest {
 		int s = test.getSize();
 		for (int i = 0; i < s; i++) {
 			for (int j = 0; j < s; j++) {
+				if (test.getG()[i][j]== 'X') {
+					count++;
+				}
+			}
+		}
+		assertEquals(54, count);
+	}
+	/**
+	 * Test hardcore difficulty constructor of Grid class
+	 * @see Grid#Grid(Constants.Difficulty)
+	 */
+	@Test
+	public void test_Grid_Hardcore() {
+		int count = 0;
+		Grid test = new Grid(Constants.Difficulty.HARDCORE);
+		int s = test.getSize();
+		for (int i = 0; i < s; i++) {
+			for (int j = 0; j < s; j++) {
 				if (test.getG()[i][j] == 'X') {
 					count++;
 				}
 			}
 		}
-		assertEquals(60, count);
+		assertEquals(100, count);
+	}
+	/**
+	 * Test extreme difficulty constructor of Grid class
+	 * @see Grid#Grid(Constants.Difficulty)
+	 */
+	@Test
+	public void test_Grid_Extreme() {
+		int count = 0;
+		Grid test = new Grid(Constants.Difficulty.EXTREME);
+		int s = test.getSize();
+		for (int i = 0; i < s; i++) {
+			for (int j = 0; j < s; j++) {
+				if (test.getG()[i][j]== 'X') {
+					count++;
+				}
+			}
+		}
+		assertEquals(127, count);
+	}
+	/**
+	 * Test legendary difficulty constructor of Grid class
+	 * @see Grid#Grid(Constants.Difficulty)
+	 */
+	@Test
+	public void test_Grid_Legendary() {
+		int count = 0;
+		Grid test = new Grid(Constants.Difficulty.LEGENDARY);
+		int s = test.getSize();
+		for (int i = 0; i < s; i++) {
+			for (int j = 0; j < s; j++) {
+				if (test.getG()[i][j]== 'X') {
+					count++;
+				}
+			}
+		}
+		assertEquals(190, count);
 	}
 
 	/**
