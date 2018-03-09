@@ -19,7 +19,6 @@ public class PathFinder{
      */
     public static void findEmpty(int k, int n, GridComponent[][] cell){
         stackPush(cell[k][n]);
-        //char empty= '0';
         GridComponent temp;
         int counter=0;
         System.out.println("X:"+k+ "  Y:"+n);
@@ -27,16 +26,56 @@ public class PathFinder{
             temp=stack.pop();
             temp.open();
             Grid.addVisibleCell(temp.getX(), temp.getY());
-            //if(temp.getSymbol()!='0')
             counter++;
             System.out.println(counter);
-            //System.out.println("X: "+temp.getX()+"  Y: "+temp.getY() + " Symbol: "+temp.getSymbol());
-            Grid.incrementCorrectMoves();
             if (temp.getSymbol() == '0') {
                 surroundingCells(cell, temp.getX(), temp.getY());
             }
+        }
+    }
+    private static void surroundingCells(GridComponent[][] cells, final int row, final int column){
+        //If cell is not on edge then use passed values.
+        int xStart=row-1;
+        int xEnd=row+1;
+        int yStart=column-1;
+        int yEnd=column+1;
+        //if the cell is on the left edge.
+        if (xStart <0){
+            xStart=row;
+        }
+        //if the cell is in the right edge.
+        else if(xEnd > cells.length-1){
+            xEnd=row;
+        }
+        //if the cell is in the top edge.
+        if (yStart < 0){
+            yStart=column;
+        }
+        //if the cell is in the bottom edge.
+        else if(yEnd > cells[row].length-1){
+            yEnd=column;
+        }
+        for(int k=xStart; k<=xEnd; k++){
+            for(int n=yStart; n<=yEnd; n++){
+                if(!cells[k][n].getIsMarked() && cells[k][n].getSymbol()=='0') {
+                    stack.push(cells[k][n]);
+                }
+                else if (!cells[k][n].getIsMarked()){
+                    cells[k][n].open();
+                    Grid.addVisibleCell(k,n);
+                }
+            }
+        }
 
-            /*
+    }
+    private static void stackPush(GridComponent cell){
+        if(stack == null) {
+            stack = new Stack<GridComponent>();
+        }
+        stack.push(cell);
+    }
+
+    /*
             if (k - 1 >= 0) {
                 if (!cell[k - 1][n].getIsMarked()) {
                     if ((cell[k - 1][n].getSymbol()) == empty) {
@@ -87,48 +126,4 @@ public class PathFinder{
 
                 }
             }*/
-        }
-    }
-    private static void surroundingCells(GridComponent[][] cells, final int row, final int column){
-        //If cell is not on edge then use passed values.
-        int xStart=row-1;
-        int xEnd=row+1;
-        int yStart=column-1;
-        int yEnd=column+1;
-        //if the cell is on the left edge.
-        if (xStart <0){
-            xStart=row;
-        }
-        //if the cell is in the right edge.
-        else if(xEnd > cells.length-1){
-            xEnd=row;
-        }
-        //if the cell is in the top edge.
-        if (yStart < 0){
-            yStart=column;
-        }
-        //if the cell is in the bottom edge.
-        else if(yEnd > cells[row].length-1){
-            yEnd=column;
-        }
-        for(int k=xStart; k<=xEnd; k++){
-            for(int n=yStart; n<=yEnd; n++){
-                if(!cells[k][n].getIsMarked() && cells[k][n].getSymbol()=='0') {
-                    stack.push(cells[k][n]);
-                }
-                else if (!cells[k][n].getIsMarked()){
-                    cells[k][n].open();
-                    Grid.addVisibleCell(k,n);
-                    Grid.incrementCorrectMoves();
-                }
-            }
-        }
-
-    }
-    private static void stackPush(GridComponent cell){
-        if(stack == null) {
-            stack = new Stack<GridComponent>();
-        }
-        stack.push(cell);
-    }
 }

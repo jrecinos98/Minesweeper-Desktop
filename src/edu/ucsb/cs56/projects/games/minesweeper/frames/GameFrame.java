@@ -321,6 +321,7 @@ public class GameFrame extends JFrame {
 	    fontSize = buttons[0][0].getSize().width / 4;
 	}
 	for(int x=0; x<=Grid.getVisibleSize(); x++){
+	    game.incrementCorrectMoves();
 	    Dimension cor = Grid.getCellCor(x);
 	    int i = (int) cor.getWidth();
 	    int j = (int) cor.getHeight();
@@ -334,32 +335,6 @@ public class GameFrame extends JFrame {
     for (int x=0; x<=Grid.getVisibleSize(); x++){
 	    Grid.removeCellCor(x);
     }
-	/*
-	for (int i = 0; i < game.getSize(); i++) {
-	    for (int j = 0; j < game.getSize(); j++) {
-		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
-		if (game.isOpen(i, j)) {
-		    if (game.isMine(i, j)) {
-
-			buttons[i][j].setIcon(theMine);
-		    } else {
-                buttons[i][j].setBackground(Grey);
-			if (game.getCell(i, j) == '0') {
-			    buttons[i][j].setForeground(ZERO);
-			} else {
-			    buttons[i][j].setForeground(NUMBER);
-				buttons[i][j].setText(Character.toString(game.getCell(i, j)));
-			}
-
-		    }
-		} else if (game.isFlag(i, j)) {
-		    buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
-		} else {
-		    buttons[i][j].setIcon(null);
-		    buttons[i][j].setText("");
-		}
-	    }
-	}*/
     }
 
     /**
@@ -541,7 +516,9 @@ public class GameFrame extends JFrame {
             if (response == JOptionPane.YES_OPTION) {
                 MineGUI.goToMainMenu();
             }
-            resetGame();
+            else{
+                resetGame();
+            }
         }
 
         public void gameWonPrompt(boolean database) {
@@ -578,3 +555,29 @@ public class GameFrame extends JFrame {
 
 
 }
+/*
+	for (int i = 0; i < game.getSize(); i++) {
+	    for (int j = 0; j < game.getSize(); j++) {
+		buttons[i][j].setFont(new Font("sansserif", Font.BOLD, fontSize));
+		if (game.isOpen(i, j)) {
+		    if (game.isMine(i, j)) {
+
+			buttons[i][j].setIcon(theMine);
+		    } else {
+                buttons[i][j].setBackground(Grey);
+			if (game.getCell(i, j) == '0') {
+			    buttons[i][j].setForeground(ZERO);
+			} else {
+			    buttons[i][j].setForeground(NUMBER);
+				buttons[i][j].setText(Character.toString(game.getCell(i, j)));
+			}
+
+		    }
+		} else if (game.isFlag(i, j)) {
+		    buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
+		} else {
+		    buttons[i][j].setIcon(null);
+		    buttons[i][j].setText("");
+		}
+	    }
+	}*/

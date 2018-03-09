@@ -38,7 +38,7 @@ public class Grid implements Serializable{
 	private GridComponent[][] grid;
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
-	private static int correctMoves;
+	private int correctMoves;
 	private static ArrayList<Dimension> visibleCells;
 
 	/**
@@ -77,11 +77,11 @@ public class Grid implements Serializable{
 	    Dimension last= new Dimension(row,column);
 	    visibleCells.add(last);
     }
-	public static void incrementCorrectMoves(){
+	public void incrementCorrectMoves(){
 	    correctMoves++;
 	    //System.out.println(correctMoves);
     }
-    public static void decrementCorrectMoves(){
+    public void decrementCorrectMoves(){
 	    correctMoves--;
     }
 
