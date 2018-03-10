@@ -40,6 +40,7 @@ public class Grid implements Serializable{
 	private Constants.Difficulty difficulty;
 	private int correctMoves;
 	private ArrayList<Dimension> makeVisible;
+	private Dimension corOfClickedMine;
 
 	/**
 	 * Default constructor for objects of class GUIGrid
@@ -66,6 +67,9 @@ public class Grid implements Serializable{
 		}
 		startTimer();
 	}
+	private void makeMine(int x,int y){
+	    grid[x][y].makeMine();
+    }
 
 
     /**
@@ -105,22 +109,81 @@ public class Grid implements Serializable{
 
         }
     }
-    public void shuffleMine(int x, int y){
+    private void setSymbol(int x, int y,char symbol){
+        grid[x][y].setSymbol(symbol);
+    }
+    /**
+     * Helper method for test_shuffleMine.
+     * @param x
+     * @param y
+     * @param grid
+     * @return
+     */
+    public static ArrayList<Integer> getSurrounding(int x, int y, Grid grid){
+        ArrayList<Integer> neighbors= new ArrayList<Integer>();
+        int xStart=x-1;
+        int xEnd=x+1;
+        int yStart=y-1;
+        int yEnd=y+1;
+        //if the bomb is on the left edge.
+        if (xStart <0){
+            xStart=x;
+        }
+        //if the bomb is in the right edge.
+        else if(xEnd > grid.getSize()-1){
+            xEnd=x;
+        }
+        //if the bomb is in the top edge.
+        if (yStart < 0){
+            yStart=y;
+        }
+        //if the bomb is in the bottom edge.
+        else if(yEnd > grid.getSize()-1){
+            yEnd=y;
+        }
+        for(int k=xStart; k<=xEnd; k++){
+            for(int n=yStart; n<=yEnd; n++){
+                if(k != x && n!=y ) {
+                    neighbors.add(Character.getNumericValue(grid.getCellSymbol(k, n)));
+                }
+            }
+        }
+        return neighbors;
+    }
+
+
+    /**
+     * Moves a mine to a random available spot on the grid and increments or decrements its neighbors as needed.
+     * @param x xCor of the clicked mine
+     * @param y yCor of the clicked mine
+     * @return Dimension object containing the new location of the mine. Used for test purposes.
+     */
+    public ArrayList<Integer> shuffleMine(int x, int y, Grid grid){
         System.out.println("Shuffle was called");
+        ArrayList<Integer> newMineNeighbors= new ArrayList<>();
         // This decrements the surrounding cells.
-        grid[x][y].setSymbol('0');
+        grid.setSymbol(x,y,'0');
         cellSymbolUpdate(x,y);
         //update the current cell.
-        grid[x][y].setSymbol('/');
+        grid.setSymbol(x,y,'/');
         cellSymbolUpdate(x,y);
         Random random = new Random();
-        int row= random.nextInt(grid.length);
-        int col= random.nextInt(grid.length);
-        while(!grid[row][col].getIsMine() && row!=x && col !=y){
-            //spawn mine at random place and update the surrounding cells.
-            grid[row][col].makeMine();
-            cellSymbolUpdate(row,col);
+        int row=x;
+        int col=y;
+        int bomb=1;
+        //find an empty spot that is not
+        while(bomb != 0){
+            row = random.nextInt(grid.getSize());
+            col = random.nextInt(grid.getSize());
+            if((row!=x && col !=y) && !grid.isMine(row,col)) {
+                grid.makeMine(row,col);
+                corOfClickedMine= new Dimension(row,col);
+                newMineNeighbors=getSurrounding(row,col,this);
+                cellSymbolUpdate(row, col);
+                bomb--;
+            }
         }
+        return newMineNeighbors;
 
     }
     /**
@@ -128,6 +191,7 @@ public class Grid implements Serializable{
      * @param row The row that the cell is found in.
      * @param column The column where the cell is found in.
      */
+
     private void cellSymbolUpdate(final int row, final int column){
         //If bomb is not on edge then use passed values.
         int xStart=row-1;
@@ -153,6 +217,7 @@ public class Grid implements Serializable{
         char counter='0';
         for(int k=xStart; k<=xEnd; k++){
             for(int n=yStart; n<=yEnd; n++){
+                //Got Lazy. Best approach would be to extract the counting into another function.
                 if(grid[k][n].getIsMine() && grid[row][column].getSymbol() == '/'){
                     if (grid[k][n].getIsMine()){
                         counter++;
@@ -225,6 +290,12 @@ public class Grid implements Serializable{
         return gameState;
     }
 
+    /**
+     * returns a GridComponent located at position (x,y) in the grid.
+     * @param x xCor
+     * @param y yCor
+     * @return GridComponent located at position (x,y)
+     */
     public GridComponent getCell(int x, int y){
         return grid[x][y];
     }
@@ -237,6 +308,20 @@ public class Grid implements Serializable{
      */
     public char getCellSymbol(int i, int j) {
         return grid[i][j].getSymbol();
+    }
+
+    /**
+     * Used to get the coordinates of mine if clicked on first turn.
+     * Ideally only call this method if the shuffleMine method was called. Has no use otherwise.
+     * @return Dimension object containing the location of a mine.
+     */
+    public Dimension getCorOfClickedMine(){
+        if(corOfClickedMine==null){
+            return null;
+        }
+        else{
+            return corOfClickedMine;
+        }
     }
 
     /**
