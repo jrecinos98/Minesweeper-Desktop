@@ -46,7 +46,7 @@ public class GridComponent implements Serializable {
 
 	/**
 	 * sets the xCor of cell on the grid
-	 * @param x
+	 * @param x xCor
 	 */
 	public void setXCor(int x){
 	    xCor=x;
@@ -54,7 +54,7 @@ public class GridComponent implements Serializable {
 
     /**
      * sets the yCor of cell on the grid
-     * @param y
+     * @param y yCor
      */
     public void setYCor(int y){
 	    yCor=y;
@@ -62,7 +62,7 @@ public class GridComponent implements Serializable {
 
     /**
      *returns xCor
-     * @return
+     * @return xCor
      */
     public int getX(){
 	    return xCor;
@@ -70,7 +70,7 @@ public class GridComponent implements Serializable {
 
     /**
      * return yCor
-     * @return
+     * @return yCor
      */
     public int getY(){
 	    return yCor;
@@ -125,7 +125,7 @@ public class GridComponent implements Serializable {
 		return isFlagged;
 	}
     /**
-     *If the cell is flagged or open then return true (meaning it has been traversed before). Else return false.
+     * @return If the cell is flagged or open then return true (meaning it has been traversed before). Else return false.
      */
     public boolean getIsMarked(){
         if (getIsFlagged() || getIsOpen()){

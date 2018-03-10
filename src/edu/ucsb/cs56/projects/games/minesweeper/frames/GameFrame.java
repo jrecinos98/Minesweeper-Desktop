@@ -441,7 +441,7 @@ public class GameFrame extends JFrame {
     }
     /**
      * Dialog that displays a congratulatory message and asks the user for input.
-     * @param database
+     * @param database The database
      */
     public void gameWonPrompt(boolean database) {
         String soundName = "/sounds/win.wav";

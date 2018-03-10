@@ -114,10 +114,10 @@ public class Grid implements Serializable{
     }
     /**
      * Helper method for test_shuffleMine.
-     * @param x
-     * @param y
-     * @param grid
-     * @return
+     * @param x xCor
+     * @param y yCor
+     * @param grid game grid.
+     * @return ArrayList containing the cell symbol of all neighbors.
      */
     public static ArrayList<Integer> getSurrounding(int x, int y, Grid grid){
         ArrayList<Integer> neighbors= new ArrayList<Integer>();
@@ -156,6 +156,7 @@ public class Grid implements Serializable{
      * Moves a mine to a random available spot on the grid and increments or decrements its neighbors as needed.
      * @param x xCor of the clicked mine
      * @param y yCor of the clicked mine
+     * @param grid The game grid.
      * @return Dimension object containing the new location of the mine. Used for test purposes.
      */
     public ArrayList<Integer> shuffleMine(int x, int y, Grid grid){
@@ -340,14 +341,14 @@ public class Grid implements Serializable{
 
     /**
      * Returns the size of the makeVisible.
-     * @return
+     * @return size of array containing the visible cells
      */
     public int getVisibleSize(){return makeVisible.size() ;}
 
     /**
      * Returns Dimension object containing x and y coordinates of a cell that needs to be refreshed.
      * @param x Location in make
-     * @return
+     * @return xCor
      */
 	public Dimension getCellCor(int x){
         return makeVisible.get(x);
