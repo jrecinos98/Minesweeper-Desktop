@@ -1,5 +1,7 @@
 package edu.ucsb.cs56.projects.games.minesweeper.frames;
 
+import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -35,6 +37,7 @@ public class HelpScreen extends JFrame {
 		screen.add(helpText);
 		screen.add(backButton);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        MineGUI.centerWindow(this);
 	}
 
 	/**

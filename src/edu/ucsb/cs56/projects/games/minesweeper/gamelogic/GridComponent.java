@@ -12,6 +12,8 @@ public class GridComponent implements Serializable {
 	private boolean isOpen;
 	private boolean isFlagged;
 	private char symbol;
+	private int xCor;
+	private int yCor;
 
 	/**
 	 * Creates default grid element
@@ -24,7 +26,7 @@ public class GridComponent implements Serializable {
 	}
 
 	/**
-	 * increment the symbol of the cell
+	 * increment the symbol of the cell.
 	 * Won't work if a mine
 	 */
 	public void iterate() {
@@ -33,9 +35,49 @@ public class GridComponent implements Serializable {
 		}
 	}
 
+    /**
+     * decrement the symbol of the cell.
+     */
+	public void decrement(){
+	    if(symbol != '0'){
+	        symbol--;
+        }
+    }
+
+	/**
+	 * sets the xCor of cell on the grid
+	 * @param x xCor
+	 */
+	public void setXCor(int x){
+	    xCor=x;
+    }
+
+    /**
+     * sets the yCor of cell on the grid
+     * @param y yCor
+     */
+    public void setYCor(int y){
+	    yCor=y;
+    }
+
+    /**
+     *returns xCor
+     * @return xCor
+     */
+    public int getX(){
+	    return xCor;
+    }
+
+    /**
+     * return yCor
+     * @return yCor
+     */
+    public int getY(){
+	    return yCor;
+    }
 	/**
 	 * Make this cell a mine
-	 * Won;t work if already a mine
+	 * Won't work if already a mine
 	 * @return boolean indicating whether the function was successful
 	 */
 	public boolean makeMine() {
@@ -82,6 +124,16 @@ public class GridComponent implements Serializable {
 	public boolean getIsFlagged() {
 		return isFlagged;
 	}
+    /**
+     * @return If the cell is flagged or open then return true (meaning it has been traversed before). Else return false.
+     */
+    public boolean getIsMarked(){
+        if (getIsFlagged() || getIsOpen()){
+            return true;
+        }
+        else
+            return false;
+    }
 
 	/**
 	 * Get whether cell is a mine
@@ -98,6 +150,14 @@ public class GridComponent implements Serializable {
 	public char getSymbol() {
 		return symbol;
 	}
+
+    /**
+     * Changes the symbol of the cell
+     * @param symbol Symbol to be changed to.
+     */
+	public void setSymbol(char symbol){
+	    this.symbol=symbol;
+    }
 
 	/**
 	 * Get string representation of cell

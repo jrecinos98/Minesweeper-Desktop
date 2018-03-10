@@ -7,7 +7,7 @@ import edu.ucsb.cs56.projects.games.minesweeper.text.TextGame;
  * by specifying an option.
  * MainEntry is assigned as Main-Class in the MANIFEST.MF file by the ant target 'jar'.
  *
- * @author Jose Recinos.
+ * @author Jose Recinos, Winter 2018
  */
 public class MainEntry{
     /**

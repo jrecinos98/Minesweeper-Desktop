@@ -15,6 +15,7 @@ import javax.swing.table.TableColumn;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.database.DBConnector;
+import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
 
 /**
  * Displays the leaderboard in a table using the javax.swing package
@@ -35,6 +36,7 @@ public class LeaderboardFrame extends JFrame {
 	public LeaderboardFrame() {
 		super();
 		setSize(650, 600);
+		MineGUI.centerWindow(this);
 		difficulty = Constants.Difficulty.EASY;
 		Container menu = getContentPane();
 		menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
