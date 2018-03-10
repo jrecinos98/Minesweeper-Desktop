@@ -160,7 +160,6 @@ public class Grid implements Serializable{
      * @return Dimension object containing the new location of the mine. Used for test purposes.
      */
     public ArrayList<Integer> shuffleMine(int x, int y, Grid grid){
-        System.out.println("Shuffle was called");
         ArrayList<Integer> newMineNeighbors= new ArrayList<>();
         // This decrements the surrounding cells.
         grid.setSymbol(x,y,'0');
