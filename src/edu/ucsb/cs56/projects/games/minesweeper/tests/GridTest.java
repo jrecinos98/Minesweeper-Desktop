@@ -136,6 +136,7 @@ public class GridTest {
 		assertEquals(190, count);
 	}
 
+	//Test is almost done. Needs so improvements.
 /*
     /**
      * Test case for shuffleMine method in the Grid class
