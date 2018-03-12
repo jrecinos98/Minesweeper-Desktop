@@ -25,7 +25,6 @@ import java.awt.event.*;
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
-
 /**
  * Main Menu JFrame
  * @author Ryan Wiener
@@ -219,6 +218,11 @@ public class MainMenu extends JFrame {
 	    }
     }
 
+    /**
+     * Loads background image.
+     * @param dir path of the image
+     * @return IMage Icon containing the directory path.
+     */
     private ImageIcon getBackgroundImage(String dir){
         File local = new File("resources"+dir);
         ImageIcon icon;

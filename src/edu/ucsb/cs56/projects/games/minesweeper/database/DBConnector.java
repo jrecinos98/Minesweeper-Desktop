@@ -86,11 +86,11 @@ public class DBConnector {
 	 * difficulty corresponds with the Difficulty enum .ordinal() method
 	 * @return boolean indicating whether score addition was successful or not
 	 */
-	public static boolean addScore(String name, int score, int difficulty) {
+	public static boolean addScore(String name, String score, int difficulty) {
 		if (isConnected()) {
 			try {
 				insertionStatement.setString(1, name);
-				insertionStatement.setInt(2, score);
+				insertionStatement.setString(2, score);
 				insertionStatement.setInt(3, difficulty);
 				int rowCount = insertionStatement.executeUpdate();
 				if (rowCount > 0) {
