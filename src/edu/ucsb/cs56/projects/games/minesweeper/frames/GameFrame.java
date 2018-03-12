@@ -592,8 +592,15 @@ public class GameFrame extends JFrame {
                         String soundName = "/sounds/clicked.wav";
                         playSound(soundName);
                         if (result == '0') {
-                            // need to update all cells since they opened up
-                            refresh();
+                            Runnable runnable= new Runnable() {
+                                @Override
+                                public void run() {
+                                    // need to update all cells since they opened up
+                                    refresh();
+                                }
+                            };
+                            Thread r= new Thread(runnable);
+                            r.start();
                         } else {
                             // only need to update the current cell
                             updateSingleCell(row,col,null);
