@@ -118,7 +118,7 @@ public class GameFrame extends JFrame {
     private int getFontSize(){
         int fontSize = buttons[0][0].getSize().height/2;
         if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
-            fontSize = buttons[0][0].getSize().width/3;
+            fontSize = buttons[0][0].getSize().width/4;
         }
         return fontSize;
     }
