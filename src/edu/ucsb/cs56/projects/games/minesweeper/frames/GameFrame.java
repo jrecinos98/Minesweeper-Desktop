@@ -191,6 +191,7 @@ public class GameFrame extends JFrame {
 
     /**
      * resets button.
+     * @param button A reference to the Button to be reset.
      */
     public void resetButton(JButton button){
         button.setBackground(Unpressed);

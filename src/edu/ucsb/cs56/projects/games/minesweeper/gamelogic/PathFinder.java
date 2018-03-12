@@ -4,10 +4,10 @@ import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 import java.util.Stack;
 
 /**
- * PathFinder is an abstract class with a single public method called findEmpty.
- * findEmpty is used to find and open all the cells that should be revealed after the user clicks on an empty cell.
- * The cell located in grid[row][col] must be empty (the cell symbol is '0'). This is pushed onto the stack, added to makeVisible and we search
- * its neighboring cells. Any neighbor empty cells are pushed onto the stack and any cells containing a numerical value are opened added to makeVisible,
+ * PathFinder is an abstract class with a single public method called findCellsToOpen.
+ * findCellsToOpen is used to find and open all the cells that should be revealed after the user clicks on an empty cell.
+ * The cell located in grid[row][col] must be empty (the cell symbol is '0'). This is pushed onto the stack, added to makeVisible (which is a Stack with references to GridComponent objects) and we search
+ * its neighboring cells. Any neighbor empty cells are pushed onto the stack and any cells containing a numerical value are opened and added to makeVisible,
  * but not pushed to the stack. Repeat until the stack is empty.
  *
  * @author Jose Recinos, Winter 2018.
@@ -17,7 +17,7 @@ public abstract class PathFinder{
     /**
      * Precondition: The cell at specified row and column must be an empty cell.
      * PostCondition: The location of the cells that have been marked as open have been added to
-     * the array of visible cells in the grid.
+     * the stack of visible cells in the grid.
      * @param row Row of the current cell
      * @param col Column of the current cell
      * @param grid Grid object that contains all of the cells in the current game.
