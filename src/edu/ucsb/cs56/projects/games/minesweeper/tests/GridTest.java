@@ -136,22 +136,22 @@ public class GridTest {
 		assertEquals(190, count);
 	}
 
-	//Test is almost done. Needs so improvements.
-/*
+	//Test is almost done. Needs some improvements.
+
     /**
      * Test case for shuffleMine method in the Grid class
-
     @Test
+	*/
     public void test_shuffleMine(){
 
     	Grid test;
         int counter =0;
         while(counter < 25){
         	//System.out.println(counter);
-			Stack<Integer> oldMineNeighborsBeforeShuffle;
-			Stack<Integer> oldMineNeighborsAfterShuffle;
-			Stack<Integer> newNeighborsBeforeShuffle;
-			Stack<Integer> newNeighborsAfterShuffle;
+			ArrayList<Integer> oldMineNeighborsBeforeShuffle;
+			ArrayList<Integer> oldMineNeighborsAfterShuffle;
+			ArrayList<Integer> newNeighborsBeforeShuffle;
+			ArrayList<Integer> newNeighborsAfterShuffle;
             test =  new Grid(Constants.Difficulty.EASY);
             Random r= new Random();
             int x= r.nextInt(test.getSize());
@@ -180,6 +180,10 @@ public class GridTest {
 				//Obtain the new modified neighbors
 				newNeighborsAfterShuffle=Grid.getSurrounding((int)newMineLocation.getWidth(),(int)newMineLocation.getHeight(),test);
 
+				/*
+
+
+
 
 				//Check that the decrement was done correctly
                 while(!oldMineNeighborsBeforeShuffle.empty()){
@@ -198,10 +202,12 @@ public class GridTest {
 
                 //increment counter.
                 counter++;
+
+                */
             }
         }
     }
-    */
+
 
 	/**
 	 * Test case for isOpen method of the Grid class

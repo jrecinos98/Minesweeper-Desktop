@@ -28,7 +28,7 @@ public abstract class PathFinder{
         while(!stack.empty()) {
             temp=stack.pop();
             //temp.open();
-            grid.addVisibleCell(temp.getX(), temp.getY());
+            grid.addVisibleCell(temp);
             if (temp.getSymbol() == '0') {
                 surroundingCells(grid, temp.getX(), temp.getY());
             }
@@ -64,7 +64,7 @@ public abstract class PathFinder{
                 }
                 else if (!grid.getCell(k,n).getIsMarked()){
                     grid.getCell(k,n).open();
-                    grid.addVisibleCell(k,n);
+                    grid.addVisibleCell(grid.getCell(k,n));
                 }
             }
         }

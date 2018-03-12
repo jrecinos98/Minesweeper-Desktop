@@ -104,9 +104,9 @@ public abstract class Constants {
     }
 
     /**
-     * Returns the color of a
-     * @param num
-     * @return
+     * Given an int it returns the color that it should have.
+     * @param num The value of a particular cell in the grid.
+     * @return The color it should have on the game grid.
      */
     public static Color getNumColor(Integer num){
 	    if (numColors.size() == 0){

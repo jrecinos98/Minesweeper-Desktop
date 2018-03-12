@@ -39,7 +39,7 @@ public class Grid implements Serializable{
 	private Constants.GameState gameState;
 	private Constants.Difficulty difficulty;
 	private int correctMoves;
-	private ArrayList<Dimension> makeVisible;
+	private Stack<GridComponent> makeVisible;
 	private Dimension corOfClickedMine;
 
 
@@ -62,16 +62,20 @@ public class Grid implements Serializable{
 		gameState = Constants.GameState.PLAYING;
 		this.difficulty = difficulty;
 		grid = new GridComponent[Constants.getGridSize(difficulty)][Constants.getGridSize(difficulty)];
-		makeVisible = new ArrayList<Dimension>();
+		makeVisible = new Stack<>();
 		correctMoves=0;
-        //The number of bombs in the game.
-        //correctMoves = (int)((Math.sqrt(difficulty.ordinal())+ difficulty.ordinal()/2) *grid.length);
 		setCells();
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
 		startTimer();
 	}
+
+    /**
+     * transforms the cell at cor (x,y) into a mine.
+     * @param x xCor
+     * @param y yCor
+     */
 	private void makeMine(int x,int y){
 	    grid[x][y].makeMine();
     }
@@ -166,7 +170,7 @@ public class Grid implements Serializable{
      * @return Dimension object containing the new location of the mine. Used for test purposes.
      */
     public ArrayList<Integer> shuffleMine(int x, int y, Grid grid){
-        ArrayList<Integer> newMineNeighbors= new ArrayList<>();
+        ArrayList<Integer> newMineNeighborsBeforeShuffle= new ArrayList<>();
         // This decrements the surrounding cells.
         grid.setSymbol(x,y,'0');
         cellSymbolUpdate(x,y);
@@ -184,12 +188,13 @@ public class Grid implements Serializable{
             if((row!=x && col !=y) && !grid.isMine(row,col)) {
                 grid.makeMine(row,col);
                 corOfClickedMine= new Dimension(row,col);
-                newMineNeighbors=getSurrounding(row,col,this);
+                //Would only be used for testing.
+                newMineNeighborsBeforeShuffle=getSurrounding(row,col,this);
                 cellSymbolUpdate(row, col);
                 bomb--;
             }
         }
-        return newMineNeighbors;
+        return newMineNeighborsBeforeShuffle;
 
     }
     /**
@@ -345,36 +350,25 @@ public class Grid implements Serializable{
     }
 
     /**
-     * Returns the size of the makeVisible.
+     * Returns true if makeVisible is empty. False otherwise.
      * @return size of array containing the visible cells
      */
-    public int getVisibleSize(){return makeVisible.size() ;}
+    public boolean isVisibleCellsEmpty(){return makeVisible.empty() ;}
 
     /**
-     * Returns Dimension object containing x and y coordinates of a cell that needs to be refreshed.
-     * @param x Location in make
-     * @return xCor
+     * return a reference to a cell that needs to be refreshed.
+     * @return a cells that has been marked as open.
      */
-	public Dimension getCellCor(int x){
-        return makeVisible.get(x);
-    }
-
-    /**
-     * Clears all the Dimensions in makeVisible.
-     */
-    public void removeAllVisible()
-	{
-		makeVisible.clear();
+	public GridComponent getVisibleCell(){
+        return makeVisible.pop();
     }
 
     /**
      * Adds a Dimension object to makeVisible using the coordinates
-     * @param x xCor
-     * @param y yCor
+     * @param openedCell Reference to a cell that has been marked as opened and needs to be updated in the game.
      */
-    public void addVisibleCell(int x, int y){
-	    Dimension last= new Dimension(x,y);
-	    makeVisible.add(last);
+    public void addVisibleCell(GridComponent openedCell){
+	    makeVisible.push(openedCell);
     }
 
     /**

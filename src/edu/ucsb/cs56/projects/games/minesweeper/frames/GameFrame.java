@@ -6,7 +6,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
+
 import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,12 +16,13 @@ import java.util.TimerTask;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+
 
 import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.database.DBConnector;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.Grid;
 import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
+import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 
 /** The window that displays the game in the GUI
  * @author Ryan Wiener
@@ -110,6 +111,10 @@ public class GameFrame extends JFrame {
             window.setSize(width, height);
 
     }
+
+    /**
+     * @return The font size each value in the cells should have.
+     */
     private int getFontSize(){
         int fontSize = buttons[0][0].getSize().height / 2;
         if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
@@ -381,8 +386,6 @@ public class GameFrame extends JFrame {
     /**
      * restores the previous state of a game loaded from save file.
      */
-
-
     private void reload() {
         for (int i = 0; i < game.getSize(); i++) {
             for (int j = 0; j < game.getSize(); j++) {
@@ -416,14 +419,12 @@ public class GameFrame extends JFrame {
      * Refreshes the grid to coincide with the game
      */
     private void refresh() {
-	    for(int x=0; x< game.getVisibleSize(); x++){
-            Dimension cor = game.getCellCor(x);
-            int i = (int) cor.getWidth();
-            int j = (int) cor.getHeight();
-            updateSingleCell(i,j,null);
+        GridComponent temp;
+        while(!game.isVisibleCellsEmpty()){
+            temp= game.getVisibleCell();
+            updateSingleCell(temp.getX(),temp.getY(),null);
             game.incrementCorrectMoves();
         }
-        game.removeAllVisible();
     }
     /**
      * Reveals all the cells in the game.
