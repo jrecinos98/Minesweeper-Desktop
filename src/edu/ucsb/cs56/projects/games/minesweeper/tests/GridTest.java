@@ -140,8 +140,8 @@ public class GridTest {
 
     /**
      * Test case for shuffleMine method in the Grid class
-    @Test
 	*/
+    @Test
     public void test_shuffleMine(){
 
     	Grid test;
@@ -180,12 +180,7 @@ public class GridTest {
 				//Obtain the new modified neighbors
 				newNeighborsAfterShuffle=Grid.getSurrounding((int)newMineLocation.getWidth(),(int)newMineLocation.getHeight(),test);
 
-				/*
-
-
-
-
-				//Check that the decrement was done correctly
+				/*				//Check that the decrement was done correctly
                 while(!oldMineNeighborsBeforeShuffle.empty()){
 					//System.out.println("Before: "+oldMineNeighborsBeforeShuffle.get(numOfNewNeighbors-i));
 					//System.out.println("After: "+ (oldMineNeighborsAfterShuffle.get(numOfNewNeighbors-i)+1));
