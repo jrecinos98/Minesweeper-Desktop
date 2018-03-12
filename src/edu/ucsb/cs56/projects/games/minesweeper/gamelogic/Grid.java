@@ -43,6 +43,10 @@ public class Grid implements Serializable{
 	private Dimension corOfClickedMine;
 
 
+
+    private static int numMines;
+    private static int numFlagged = 0;
+
 	/**
 	 * Default constructor for objects of class GUIGrid
 	 * same as calling Grid(Constants.Difficulty.EASY)
@@ -99,6 +103,7 @@ public class Grid implements Serializable{
             }
         }
         int bombs= (int)((Math.sqrt(difficulty.ordinal())+ difficulty.ordinal()/2) *grid.length);
+        numMines = bombs;
         while (bombs > 0){
             int x = random.nextInt(grid.length);
             int y = random.nextInt(grid.length);
@@ -401,6 +406,7 @@ public class Grid implements Serializable{
         } else {
             // TODO: places 'F' only after a left click on a nonflag occurs?
             grid[i][j].setFlagged(true);
+            numFlagged++;
             if (grid[i][j].getIsMine()) {
                 incrementCorrectMoves();
                 if (correctMoves >= grid.length * grid.length) {
@@ -421,12 +427,16 @@ public class Grid implements Serializable{
             //System.out.println("That box does not have a flag on it!");
         } else {
             grid[i][j].setFlagged(false);
+            numFlagged--;
             if (grid[i][j].getIsMine()) {
                decrementCorrectMoves();
             }
         }
     }
 
+    public int getNumFlagged(){
+        return numFlagged;
+    }
 
 	/**
 	 * Delete the current save file
@@ -468,6 +478,9 @@ public class Grid implements Serializable{
 	public int getGameTime() {
 		return gameTime;
 	}
+    public int getNumMines(){
+        return numMines;
+    }
 
 	/**
 	 * Getter for size of the grid
