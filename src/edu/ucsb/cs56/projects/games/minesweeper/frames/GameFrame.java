@@ -37,6 +37,7 @@ public class GameFrame extends JFrame {
     private Grid game;
     private JButton[][] buttons;
     private JTextField timeDisplay;
+    private JTextField minesLeftDisplay; 
     private JButton refresh;
     private JButton mainMenu;
     private JButton quitMine;
@@ -107,6 +108,9 @@ public class GameFrame extends JFrame {
      */
     public void createToolbar(JToolBar toolbar) {
         //make buttons
+        minesLeftDisplay = new JTextField(game.getNumMines()-game.getNumFlagged());   //want this number to eventually show number of mines minus number of current flags 
+        minesLeftDisplay.setColumns(4);
+        minesLeftDisplay.setEditable(false);
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         quitMine = new JButton("Quit Minesweeper");
@@ -120,6 +124,7 @@ public class GameFrame extends JFrame {
             @Override
             public void run() {
                 timeDisplay.setText(Integer.toString(game.getGameTime()));
+                minesLeftDisplay.setText(Integer.toString(game.getNumMines()-game.getNumFlagged())); //not efficient way to do this. Need to fix later
             }
         }, 0, 1);
         refresh.addActionListener((ActionEvent e)-> {
@@ -137,12 +142,13 @@ public class GameFrame extends JFrame {
             MineGUI.quitPrompt();
         });
         flagBtn.addActionListener((ActionEvent e) -> { flag(); });
+        toolbar.add(minesLeftDisplay);
         toolbar.add(flagBtn);
         toolbar.add(mainMenu);
         toolbar.add(refresh);
         toolbar.add(inGameHelp);
         toolbar.add(quitMine);
-        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
         toolbar.add(timeDisplay);
         toolbar.setFloatable(false);
     }
@@ -360,9 +366,12 @@ public class GameFrame extends JFrame {
 	return new ImageIcon(newImg);
     }
 
+
     /**
      * restores the previous state of a game loaded from save file.
      */
+
+
     private void reload() {
         for (int i = 0; i < game.getSize(); i++) {
             for (int j = 0; j < game.getSize(); j++) {
@@ -375,6 +384,11 @@ public class GameFrame extends JFrame {
                             buttons[i][j].setForeground(NUMBER);
                             buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
                         }
+
+                       // else if (game.getCellSymbol(i, j) == '0'){
+                      //  	buttons[i][j].setBackground(Color.GRAY);
+
+                       // }
                     }
                 } else if (game.isFlag(i, j)) {
                     buttons[i][j].setIcon(getImageIcon("/images/flag.png"));
@@ -537,7 +551,7 @@ public class GameFrame extends JFrame {
          *
          * @param event when a button is clicked
          */
-        public void mouseReleased(MouseEvent event) {
+        public void mouseReleased(MouseEvent event) { //Add smiley face interaction here
             if (game.getGameState() == Constants.GameState.PLAYING) {
                 if(!firstClick && game.isMine(row,col)){
                     firstClick=true;
@@ -582,6 +596,7 @@ public class GameFrame extends JFrame {
                 }
             }
         } // class ButtonListener
+
 
 
     }
