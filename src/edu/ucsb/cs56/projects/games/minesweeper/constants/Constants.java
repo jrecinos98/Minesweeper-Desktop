@@ -78,7 +78,7 @@ public abstract class Constants {
 			gridSizes.put(Difficulty.HARD, 20);
 			gridSizes.put(Difficulty.HARDCORE, 25);
 			gridSizes.put(Difficulty.EXTREME, 30);
-			gridSizes.put(Difficulty.LEGENDARY, 110);
+			gridSizes.put(Difficulty.LEGENDARY, 35);
 		}
 		return gridSizes.get(difficulty);
 	}
