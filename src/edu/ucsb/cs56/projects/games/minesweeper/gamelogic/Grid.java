@@ -15,7 +15,6 @@ import edu.ucsb.cs56.projects.games.minesweeper.constants.Constants;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.GridComponent;
 import edu.ucsb.cs56.projects.games.minesweeper.gamelogic.PathFinder;
 
-import javax.swing.*;
 
 /**
  * The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
@@ -33,7 +32,6 @@ import javax.swing.*;
  */
 
 public class Grid implements Serializable{
-    private int gameTime;
 	private int seconds;
 	private int minutes;
 	private int hours;
@@ -135,6 +133,13 @@ public class Grid implements Serializable{
 
         }
     }
+
+    /**
+     * sets symbol of cell
+     * @param x xCor
+     * @param y yCor
+     * @param symbol symbol
+     */
     private void setSymbol(int x, int y,char symbol){
         grid[x][y].setSymbol(symbol);
     }
@@ -177,7 +182,6 @@ public class Grid implements Serializable{
         return neighbors;
     }
 
-
     /**
      * Moves a mine to a random available spot on the grid and increments or decrements its neighbors as needed.
      * @param x xCor of the clicked mine
@@ -205,7 +209,7 @@ public class Grid implements Serializable{
                 grid.makeMine(row,col);
                 corOfClickedMine= new Dimension(row,col);
                 //Would only be used for testing.
-                newMineNeighborsBeforeShuffle=getSurrounding(row,col,this);
+                //newMineNeighborsBeforeShuffle=getSurrounding(row,col,this);
                 cellSymbolUpdate(row, col);
                 bomb--;
             }
@@ -446,6 +450,11 @@ public class Grid implements Serializable{
         }
     }
 
+    /**
+     *
+     * @return number of flags placed.
+     */
+
     public int getNumFlagged(){
         return numFlagged;
     }
@@ -600,7 +609,7 @@ public class Grid implements Serializable{
 		String preSpace = "";
 		String game = "";
 		game += "Difficulty: " + getDifficulty().toString() + '\t';
-		game += "Time elapsed: " + gameTime + '\n';
+		game += "Time elapsed: " + String.format("%02d:%02d:%02d",hours,minutes,seconds) + '\n';
 		game += '\n';
 		for (int i = 1; i < Integer.toString(grid.length).length(); i++) {
 			preSpace += " ";
@@ -657,7 +666,6 @@ public class Grid implements Serializable{
 		 * Increment gameTime every second
 		 */
 		public void run(){
-			gameTime++;
 			seconds++;
 			if(seconds>=60){
 			    seconds=0;

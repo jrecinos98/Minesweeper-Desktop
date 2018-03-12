@@ -218,6 +218,11 @@ public class MainMenu extends JFrame {
 	    }
     }
 
+    /**
+     * Loads background image.
+     * @param dir path of the image
+     * @return IMage Icon containing the directory path.
+     */
     private ImageIcon getBackgroundImage(String dir){
         File local = new File("resources"+dir);
         ImageIcon icon;

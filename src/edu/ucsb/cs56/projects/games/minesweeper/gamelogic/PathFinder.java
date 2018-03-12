@@ -34,6 +34,13 @@ public abstract class PathFinder{
             }
         }
     }
+
+    /**
+     * Helper function to find the surrounding Cells
+     * @param grid The game grid.
+     * @param row  row it is found in.
+     * @param column column it is found in.
+     */
     private static void surroundingCells(Grid grid, final int row, final int column){
         //If cell is not on edge then use passed values.
         int xStart=row-1;
@@ -70,6 +77,11 @@ public abstract class PathFinder{
         }
 
     }
+
+    /**
+     * Helper to push a GridComponent into the Stack
+     * @param cell
+     */
     private static void stackPush(GridComponent cell){
         if(stack == null) {
             stack = new Stack<>();
