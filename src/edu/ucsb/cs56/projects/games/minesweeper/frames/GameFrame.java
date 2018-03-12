@@ -182,6 +182,18 @@ public class GameFrame extends JFrame {
     }
 
     /**
+     * resets button.
+     */
+    public void resetButton(JButton button){
+        button.setBackground(Unpressed);
+        button.setOpaque(true);
+        button.setBorderPainted(true);
+        button.setIcon(null);
+        button.setText("");
+    }
+
+
+    /**
      * Updates only a single cell on the grid, to either a numerical value or to a bomb.
      * @param x xCor of button
      * @param y yCor of button
@@ -470,7 +482,15 @@ public class GameFrame extends JFrame {
      * Reset the game with the same difficulty
      */
     private void resetGame() {
-	    MineGUI.newGame(game.getDifficulty());
+        for (int i =0; i< game.getSize(); i++){
+            for  (int j =0; j<game.getSize();j++){
+                resetButton(buttons[i][j]);
+            }
+        }
+        game.resetGrid();
+        firstClick=false;
+
+        //MineGUI.newGame(game.getDifficulty());
     }
     /**
      * Dialog that displays a congratulatory message and asks the user for input.
@@ -572,12 +592,15 @@ public class GameFrame extends JFrame {
          */
         public void mouseReleased(MouseEvent event) { //Add smiley face interaction here
             if (game.getGameState() == Constants.GameState.PLAYING) {
-                if(!firstClick && game.isMine(row,col)){
-                    firstClick=true;
-                    game.shuffleMine(row,col,game);
-                }
-                else if(!firstClick){
-                    firstClick=true;
+                if(!firstClick){
+                    if(game.isMine(row,col)){
+                        firstClick=true;
+                        game.shuffleMine(row,col,game);
+                     }
+                     else if(!firstClick){
+                        firstClick=true;
+                     }
+                     game.startTimer();
                 }
 
                 //if you left click and the button is available (not a flag and not already opened)

@@ -68,7 +68,7 @@ public class Grid implements Serializable{
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
-		startTimer();
+		//startTimer();
 	}
 
     /**
@@ -92,6 +92,17 @@ public class Grid implements Serializable{
                 grid[i][j].iterate();
             }
         }
+    }
+    /**
+     * Resets the grid.
+     */
+    public void resetGrid(){
+        gameState = Constants.GameState.PLAYING;
+        correctMoves=0;
+        setCells();
+        gameTime=0;
+
+
     }
 
     /**
@@ -331,7 +342,9 @@ public class Grid implements Serializable{
             return null;
         }
         else{
-            return corOfClickedMine;
+            Dimension temp= corOfClickedMine;
+            corOfClickedMine=null;
+            return temp;
         }
     }
 
@@ -552,6 +565,7 @@ public class Grid implements Serializable{
                 endGame();
             } else {
                 if (currentCell == '0') {
+
                     PathFinder.findCellsToOpen(i, j,this);
                 }
                 else{
