@@ -33,7 +33,10 @@ import javax.swing.*;
  */
 
 public class Grid implements Serializable{
-	private int gameTime;
+    private int gameTime;
+	private int seconds;
+	private int minutes;
+	private int hours;
 	private transient Timer timer;
 	private GridComponent[][] grid;
 	private Constants.GameState gameState;
@@ -68,7 +71,6 @@ public class Grid implements Serializable{
 		if (difficulty == Constants.Difficulty.TEST) {
 			prepareTest(grid);
 		}
-		//startTimer();
 	}
 
     /**
@@ -100,7 +102,9 @@ public class Grid implements Serializable{
         gameState = Constants.GameState.PLAYING;
         correctMoves=0;
         setCells();
-        gameTime=0;
+        seconds=0;
+        minutes=0;
+        hours=0;
         numFlagged=0;
 
 
@@ -483,8 +487,8 @@ public class Grid implements Serializable{
 	 * get how long the user has been playing for
 	 * @return the time the user has been playing for
 	 */
-	public int getGameTime() {
-		return gameTime;
+	public String getGameTime() {
+		return String.format("%02d:%02d:%02d",hours,minutes,seconds);
 	}
     public int getNumMines(){
         return numMines;
@@ -654,6 +658,21 @@ public class Grid implements Serializable{
 		 */
 		public void run(){
 			gameTime++;
+			seconds++;
+			if(seconds>=60){
+			    seconds=0;
+			    minutes++;
+            }
+            if(minutes>=60){
+			    minutes=0;
+			    hours++;
+            }
+            if(hours >=24){
+			    hours=0;
+			    minutes=0;
+			    seconds=0;
+			    String Message="WTF";
+            }
 		}
 	}
 }

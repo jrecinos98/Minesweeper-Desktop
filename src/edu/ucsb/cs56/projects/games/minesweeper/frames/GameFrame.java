@@ -138,13 +138,15 @@ public class GameFrame extends JFrame {
         inGameHelp = new JButton("Help");
         flagBtn = new JButton("Flag"); //new ImageIcon("resource/images/flag.png"));
         timeDisplay = new JTextField(game.getGameTime());
-        timeDisplay.setColumns(4);
-        timeDisplay.setEditable(false);
+        timeDisplay.setPreferredSize( new Dimension( 60, 25 ) );
+        JPanel wrapper = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) );
+        wrapper.add(timeDisplay );
+
         Timer t = new Timer(); //It refreshes the timeDisplay every second.
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                timeDisplay.setText(displayTime(game.getGameTime()));
+                timeDisplay.setText(game.getGameTime());
                 minesLeftDisplay.setText(Integer.toString(game.getNumMines() - game.getNumFlagged())); //not efficient way to do this. Need to fix later
             }
         }, 0, 1);
@@ -174,17 +176,10 @@ public class GameFrame extends JFrame {
         toolbar.add(inGameHelp);
         toolbar.add(quitMine);
         toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
-        toolbar.add(timeDisplay);
+        toolbar.add(wrapper);
         toolbar.setFloatable(false);
     }
 
-    private String displayTime(int time){
-       long hours= TimeUnit.SECONDS.toHours(time);
-       long minutes = TimeUnit.SECONDS.toMinutes(time);
-       String formatTime= Long.toString(hours)+":" +Long.toString(minutes);
-
-       return formatTime;
-    }
     /**
      * Set the font of a button and change background Color.
      * @param button JButton that is to be modified.
@@ -502,8 +497,6 @@ public class GameFrame extends JFrame {
         }
         game.resetGrid();
         firstClick=false;
-
-        //MineGUI.newGame(game.getDifficulty());
     }
     /**
      * Dialog that displays a congratulatory message and asks the user for input.
@@ -549,7 +542,7 @@ public class GameFrame extends JFrame {
      * @param name name of user
      * @param time how long it took the user to win
      */
-    private void saveHighest(String name, int time) {
+    private void saveHighest(String name, String time) {
         DBConnector.addScore(name, time, game.getDifficulty().ordinal());
     }
 
