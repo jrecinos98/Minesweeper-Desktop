@@ -30,11 +30,12 @@ import edu.ucsb.cs56.projects.games.minesweeper.gui.MineGUI;
 
 public class GameFrame extends JFrame {
 
-    private static final Color NUMBER = new Color(0, 100, 0);
+    private Color Pressed = new Color(180,180,180);
+    private Color Unpressed = new Color(158,158,158);
+
     private static Dimension windowSize;
-
-
     private Grid game;
+
     private JButton[][] buttons;
     private JTextField timeDisplay;
     private JTextField minesLeftDisplay; 
@@ -44,9 +45,9 @@ public class GameFrame extends JFrame {
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
-	private Color Grey = new Color(180,180,180);
-	private Color Unpressed = new Color(158,158,158);
+
 	private boolean firstClick=false;
+
 
     /**
      * Constructs game from the given difficulty
@@ -109,6 +110,13 @@ public class GameFrame extends JFrame {
             window.setSize(width, height);
 
     }
+    private int getFontSize(){
+        int fontSize = buttons[0][0].getSize().height / 2;
+        if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
+            fontSize = buttons[0][0].getSize().width / 4;
+        }
+        return fontSize;
+    }
     /**
      * Initializes toolbar at the top of the screen
      * @param toolbar toolbar to be initialized
@@ -164,12 +172,8 @@ public class GameFrame extends JFrame {
      * @param button JButton that is to be modified.
      */
     private void setUpButton(JButton button){
-        button.setBackground(Grey);
-        int fontSize = buttons[0][0].getSize().height / 2;
-        if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
-            fontSize = buttons[0][0].getSize().width / 4;
-        }
-        button.setFont(new Font("sansserif", Font.BOLD, fontSize));
+        button.setBackground(Pressed);
+        button.setFont(new Font("sansserif", Font.BOLD, getFontSize()));
     }
 
     /**
@@ -184,7 +188,7 @@ public class GameFrame extends JFrame {
             buttons[x][y].setIcon(mineIcon);
         }
         else if(game.getCellSymbol(x,y) != '0') {
-            buttons[x][y].setForeground(NUMBER);
+            buttons[x][y].setForeground(Constants.getNumColor(Character.getNumericValue(game.getCell(x,y).getSymbol())));
             buttons[x][y].setText(Character.toString(game.getCellSymbol(x, y)));
         }
         else {
@@ -383,18 +387,14 @@ public class GameFrame extends JFrame {
         for (int i = 0; i < game.getSize(); i++) {
             for (int j = 0; j < game.getSize(); j++) {
                 if (game.isOpen(i, j)) {
-                    buttons[i][j].setBackground(Grey);
+                    buttons[i][j].setBackground(Pressed);
                     if (game.isMine(i, j)) {
 
                     } else {
                         if (game.getCellSymbol(i, j) != '0') {
-                            int fontSize = buttons[0][0].getSize().height / 2;
-                            if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
-                                fontSize = buttons[0][0].getSize().width / 4;
-                            }
-                            setFont(new Font("sansserif", Font.BOLD, fontSize));
+                            //setFont(new Font("sansserif", Font.BOLD, getFontSize()));
                             buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
-                            buttons[i][j].setForeground(NUMBER);
+                            buttons[i][j].setForeground(Constants.getNumColor(Character.getNumericValue(game.getCell(i,j).getSymbol())));
                         }
 
                        // else if (game.getCellSymbol(i, j) == '0'){

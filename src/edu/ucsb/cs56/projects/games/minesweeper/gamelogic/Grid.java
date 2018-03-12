@@ -171,7 +171,7 @@ public class Grid implements Serializable{
         grid.setSymbol(x,y,'0');
         cellSymbolUpdate(x,y);
         //update the current cell.
-        grid.setSymbol(x,y,'/');
+        grid.setSymbol(x,y,'.');
         cellSymbolUpdate(x,y);
         Random random = new Random();
         int row=x;
@@ -224,7 +224,7 @@ public class Grid implements Serializable{
         for(int k=xStart; k<=xEnd; k++){
             for(int n=yStart; n<=yEnd; n++){
                 //Got Lazy. Best approach would be to extract the counting into another function.
-                if(grid[k][n].getIsMine() && grid[row][column].getSymbol() == '/'){
+                if(grid[k][n].getIsMine() && grid[row][column].getSymbol() == '.'){
                     if (grid[k][n].getIsMine()){
                         counter++;
                     }
@@ -239,7 +239,7 @@ public class Grid implements Serializable{
                 }
             }
         }
-        if(grid[row][column].getSymbol() == '/'){
+        if(grid[row][column].getSymbol() == '.'){
             grid[row][column].setSymbol(counter);
         }
 
