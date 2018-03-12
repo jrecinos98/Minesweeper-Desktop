@@ -27,7 +27,7 @@ public abstract class PathFinder{
         GridComponent temp;
         while(!stack.empty()) {
             temp=stack.pop();
-            temp.open();
+            //temp.open();
             grid.addVisibleCell(temp.getX(), temp.getY());
             if (temp.getSymbol() == '0') {
                 surroundingCells(grid, temp.getX(), temp.getY());
@@ -59,9 +59,8 @@ public abstract class PathFinder{
         for(int k=xStart; k<=xEnd; k++){
             for(int n=yStart; n<=yEnd; n++){
                 if(!grid.getCell(k,n).getIsMarked() && grid.getCell(k,n).getSymbol()=='0') {
-                    if(stack.search(grid.getCell(k,n)) == -1) {
-                        stack.push(grid.getCell(k, n));
-                    }
+                    grid.getCell(k,n).open();
+                    stack.push(grid.getCell(k, n));
                 }
                 else if (!grid.getCell(k,n).getIsMarked()){
                     grid.getCell(k,n).open();
@@ -73,7 +72,7 @@ public abstract class PathFinder{
     }
     private static void stackPush(GridComponent cell){
         if(stack == null) {
-            stack = new Stack<GridComponent>();
+            stack = new Stack<>();
         }
         stack.push(cell);
     }

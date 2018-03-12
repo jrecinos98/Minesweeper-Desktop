@@ -42,6 +42,7 @@ public class Grid implements Serializable{
 	private ArrayList<Dimension> makeVisible;
 	private Dimension corOfClickedMine;
 
+
 	/**
 	 * Default constructor for objects of class GUIGrid
 	 * same as calling Grid(Constants.Difficulty.EASY)

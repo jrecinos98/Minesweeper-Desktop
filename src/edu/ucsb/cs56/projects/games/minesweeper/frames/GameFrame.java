@@ -54,15 +54,20 @@ public class GameFrame extends JFrame {
      * @throws ClassNotFoundException if loading fails
      */
     public GameFrame(Constants.Difficulty difficulty) throws IOException, ClassNotFoundException {
+        try{
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         Constants.Difficulty gameDifficulty = difficulty;
-        boolean gameReload;
+        boolean gameReload=false;
         if (gameDifficulty == Constants.Difficulty.LOAD) {
             game = Grid.loadGame();
             gameReload=true;
             gameDifficulty = game.getDifficulty();
         }
         else{
-            gameReload = false;
             game = new Grid(gameDifficulty);
         }
         setWindowSize(this, gameDifficulty);
@@ -70,13 +75,15 @@ public class GameFrame extends JFrame {
         JToolBar toolbar = new JToolBar("In-game toolbar");
         createToolbar(toolbar);//Function declared below
         getContentPane().add(toolbar, BorderLayout.NORTH); //puts the game toolbar at the top of the screen
-        grid = new JPanel(); //Declared at the top. Not of type Grid so this is allowed.
-        grid.setLayout(new GridLayout(game.getSize() ,0)); // GridLayout(int rows, int columns)
+        grid = new JPanel();
+        grid.setLayout(new GridLayout(game.getSize() ,game.getSize(),0,0)); // GridLayout(int rows, int columns)
         buttons = new JButton[game.getSize()][game.getSize()];//Array of buttons
         for (int i = 0; i < game.getSize(); i++) {
             for (int j = 0; j < game.getSize(); j++) {
             buttons[i][j] = new JButton();
             buttons[i][j].setBackground(Unpressed);
+            buttons[i][j].setOpaque(true);
+            buttons[i][j].setBorderPainted(true);
             buttons[i][j].addMouseListener(new ButtonListener(i, j));//ButtonListener defined at the bottom. Extends MouseAdapter.
             grid.add(buttons[i][j]);
             }
@@ -151,12 +158,12 @@ public class GameFrame extends JFrame {
      * @param button JButton that is to be modified.
      */
     private void setUpButton(JButton button){
+        button.setBackground(Grey);
         int fontSize = buttons[0][0].getSize().height / 2;
         if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
             fontSize = buttons[0][0].getSize().width / 4;
         }
         button.setFont(new Font("sansserif", Font.BOLD, fontSize));
-        button.setBackground(Grey);
     }
 
     /**
@@ -167,12 +174,12 @@ public class GameFrame extends JFrame {
      */
     private void updateSingleCell(int x, int y, ImageIcon mineIcon) {
         setUpButton(buttons[x][y]);
-        if(game.getCellSymbol(x,y) == 'X'){
+        if(game.getCellSymbol(x,y) == 'X' && mineIcon != null){
             buttons[x][y].setIcon(mineIcon);
         }
         else if(game.getCellSymbol(x,y) != '0') {
-            buttons[x][y].setText(Character.toString(game.getCellSymbol(x, y)));
             buttons[x][y].setForeground(NUMBER);
+            buttons[x][y].setText(Character.toString(game.getCellSymbol(x, y)));
         }
         else {
             //Cell is empty do not display 0.
@@ -372,8 +379,13 @@ public class GameFrame extends JFrame {
 
                     } else {
                         if (game.getCellSymbol(i, j) != '0') {
-                            buttons[i][j].setForeground(NUMBER);
+                            int fontSize = buttons[0][0].getSize().height / 2;
+                            if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
+                                fontSize = buttons[0][0].getSize().width / 4;
+                            }
+                            setFont(new Font("sansserif", Font.BOLD, fontSize));
                             buttons[i][j].setText(Character.toString(game.getCellSymbol(i, j)));
+                            buttons[i][j].setForeground(NUMBER);
                         }
                     }
                 } else if (game.isFlag(i, j)) {
