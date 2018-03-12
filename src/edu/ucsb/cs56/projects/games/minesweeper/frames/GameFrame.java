@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -128,7 +129,7 @@ public class GameFrame extends JFrame {
      */
     public void createToolbar(JToolBar toolbar) {
         //make buttons
-        minesLeftDisplay = new JTextField(game.getNumMines()-game.getNumFlagged());   //want this number to eventually show number of mines minus number of current flags 
+        minesLeftDisplay = new JTextField(game.getNumMines() - game.getNumFlagged());   //want this number to eventually show number of mines minus number of current flags
         minesLeftDisplay.setColumns(4);
         minesLeftDisplay.setEditable(false);
         refresh = new JButton("Reset Game");
@@ -143,11 +144,11 @@ public class GameFrame extends JFrame {
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                timeDisplay.setText(Integer.toString(game.getGameTime()));
-                minesLeftDisplay.setText(Integer.toString(game.getNumMines()-game.getNumFlagged())); //not efficient way to do this. Need to fix later
+                timeDisplay.setText(displayTime(game.getGameTime()));
+                minesLeftDisplay.setText(Integer.toString(game.getNumMines() - game.getNumFlagged())); //not efficient way to do this. Need to fix later
             }
         }, 0, 1);
-        refresh.addActionListener((ActionEvent e)-> {
+        refresh.addActionListener((ActionEvent e) -> {
             if (MineGUI.overwriteSavePrompt()) {
                 resetGame();
             }
@@ -156,12 +157,16 @@ public class GameFrame extends JFrame {
             game.save();
             MineGUI.goToMainMenu();
         });
-        inGameHelp.addActionListener((ActionEvent e) -> { MineGUI.setHelpScreenVisible(true); });
+        inGameHelp.addActionListener((ActionEvent e) -> {
+            MineGUI.setHelpScreenVisible(true);
+        });
         quitMine.addActionListener((ActionEvent e) -> {
             game.save();
             MineGUI.quitPrompt();
         });
-        flagBtn.addActionListener((ActionEvent e) -> { flag(); });
+        flagBtn.addActionListener((ActionEvent e) -> {
+            flag();
+        });
         toolbar.add(minesLeftDisplay);
         toolbar.add(flagBtn);
         toolbar.add(mainMenu);
@@ -171,6 +176,14 @@ public class GameFrame extends JFrame {
         toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
         toolbar.add(timeDisplay);
         toolbar.setFloatable(false);
+    }
+
+    private String displayTime(int time){
+       long hours= TimeUnit.SECONDS.toHours(time);
+       long minutes = TimeUnit.SECONDS.toMinutes(time);
+       String formatTime= Long.toString(hours)+":" +Long.toString(minutes);
+
+       return formatTime;
     }
     /**
      * Set the font of a button and change background Color.

@@ -101,6 +101,7 @@ public class Grid implements Serializable{
         correctMoves=0;
         setCells();
         gameTime=0;
+        numFlagged=0;
 
 
     }
