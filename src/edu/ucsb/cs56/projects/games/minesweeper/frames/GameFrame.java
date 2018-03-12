@@ -116,9 +116,9 @@ public class GameFrame extends JFrame {
      * @return The font size each value in the cells should have.
      */
     private int getFontSize(){
-        int fontSize = buttons[0][0].getSize().height / 2;
+        int fontSize = buttons[0][0].getSize().height/2;
         if (buttons[0][0].getSize().height / 2 > buttons[0][0].getSize().width / 4) {
-            fontSize = buttons[0][0].getSize().width / 4;
+            fontSize = buttons[0][0].getSize().width/3;
         }
         return fontSize;
     }
@@ -199,6 +199,7 @@ public class GameFrame extends JFrame {
         else {
             //Cell is empty do not display 0.
         }
+
     }
 
     /**
@@ -430,7 +431,7 @@ public class GameFrame extends JFrame {
      * Reveals all the cells in the game.
      */
     public void revealAll(){
-        ImageIcon mineIcon= getImageIcon("/images/mine.jpg");
+        ImageIcon mineIcon= getImageIcon("/images/mine.png");
         for(int x=0; x<game.getSize();x++){
             for(int y=0; y<game.getSize();y++){
                 if(game.isMine(x,y)){
@@ -449,10 +450,13 @@ public class GameFrame extends JFrame {
      * Reveals all the mines.
      */
     public void revealMines(){
-        ImageIcon mineIcon= getImageIcon("/images/mine.jpg");
+        ImageIcon mineIcon= getImageIcon("/images/mine.png");
         for(int x=0; x<game.getSize();x++){
             for(int y=0; y<game.getSize();y++){
-                if(game.isMine(x,y)){
+                if(game.isMine(x,y) && game.isOpen(x,y)){
+                    updateSingleCell(x,y,getImageIcon("/images/clicked_mine.jpg"));
+                }
+                else if(game.isMine(x,y)){
                     updateSingleCell(x,y,mineIcon);
                 }
             }
@@ -573,10 +577,13 @@ public class GameFrame extends JFrame {
                 else if(!firstClick){
                     firstClick=true;
                 }
+
+                //if you left click and the button is available (not a flag and not already opened)
                 if (event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(row, col) && !game.isOpen(row, col) && !flagBtn.isSelected()) {
-                    //if you left click and the button is available (not a flag and not already opened)
+
                     char result = game.searchBox(row, col);
                     if (result == 'X') {
+                        game.getCell(row,col).open();
                         gameLost();
                         return;
                     } else {
