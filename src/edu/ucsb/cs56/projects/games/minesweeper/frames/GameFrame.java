@@ -188,7 +188,9 @@ public class GameFrame extends JFrame {
      * @param mineIcon Image of mine to be used.
      */
     private void updateSingleCell(int x, int y, ImageIcon mineIcon) {
-        setUpButton(buttons[x][y]);
+        if (mineIcon == null){
+            setUpButton(buttons[x][y]);
+        }
         if(game.getCellSymbol(x,y) == 'X' && mineIcon != null){
             buttons[x][y].setIcon(mineIcon);
         }
