@@ -34,7 +34,6 @@ public class GameFrame extends JFrame {
 
     private Color Pressed = new Color(180,180,180);
     private Color Unpressed = new Color(158,158,158);
-    //private ImageIcon face = new ImageIcon(getSmileyIcon("/images/normal.png"))
 
     private static Dimension windowSize;
     private Grid game;
@@ -164,6 +163,7 @@ public class GameFrame extends JFrame {
         }, 0, 1);
         smiley.addActionListener((ActionEvent e) -> {
             if (MineGUI.overwriteSavePrompt()) {
+
                 resetGame();
             }
         });
@@ -528,6 +528,8 @@ public class GameFrame extends JFrame {
                 resetButton(buttons[i][j]);
             }
         }
+        ImageIcon temp = getSmileyIcon("/images/normal.png");
+        smiley.setIcon(temp);
         game.resetGrid();
         firstClick=false;
     }
@@ -647,11 +649,15 @@ public class GameFrame extends JFrame {
 
                     char result = game.searchBox(row, col);
                     if (result == 'X') {
-                        //smiley.setIcon(getSmileyIcon("images/dead.png"));
+                        ImageIcon temp = getSmileyIcon("/images/dead.png");
+                        smiley.setIcon(temp);
+                        //smiley.setIcon(getSmileyIcon("images/dead.png")); **Does not work for some reason
                         game.getCell(row,col).open();
                         gameLost();
                         return;
                     } else {
+                        ImageIcon temp = getSmileyIcon("/images/normal.png");
+                        smiley.setIcon(temp);
                         String soundName = "/sounds/clicked.wav";
                         playSound(soundName);
                         if (result == '0') {
@@ -669,6 +675,8 @@ public class GameFrame extends JFrame {
                     playSound(soundName);
                 }
                 else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
+                    ImageIcon temp = getSmileyIcon("/images/normal.png");
+                    smiley.setIcon(temp);
                     // If you right click or have flag button selected
                     if (game.isFlag(row, col)) {
                         deflagCell(row,col);
@@ -680,6 +688,12 @@ public class GameFrame extends JFrame {
                     //smiley.setIcon(getSmileyIcon("/images/win.png"));
                     gameWonPrompt(DBConnector.isConnected());
                 }
+            }
+        }
+        public void mousePressed(MouseEvent event){
+            if (game.getGameState() == Constants.GameState.PLAYING){
+                ImageIcon temp = getSmileyIcon("/images/scared.png");
+                smiley.setIcon(temp);
             }
         }
 
