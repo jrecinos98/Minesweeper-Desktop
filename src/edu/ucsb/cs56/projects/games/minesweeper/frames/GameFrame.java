@@ -685,6 +685,8 @@ public class GameFrame extends JFrame {
                     }
                 }
                 if (game.getGameState() == Constants.GameState.WON) {
+                    ImageIcon temp = getSmileyIcon("/images/win.png");
+                    smiley.setIcon(temp);
                     //smiley.setIcon(getSmileyIcon("/images/win.png"));
                     gameWonPrompt(DBConnector.isConnected());
                 }
