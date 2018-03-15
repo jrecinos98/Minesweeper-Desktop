@@ -45,6 +45,10 @@ First set up your environment variables to connect to your postgrsql database th
 
 ![Alt Text](https://media.giphy.com/media/5z24YknBcpkmlNqyEk/giphy.gif)
 
+W18 Final Remarks
+=================
+The gui game is completely redone and refactored so now it runs much smoother as well as looks much cleaner and visually pleasing
+To gain a better understanding of the code I would recommend you look at Grid.java and GameFrame.java first. This is where most of the mechanics of the game are held. There still isn't 100% test coverage so that would be a great way to understand how the code works at the same time as tackling an important issue. 
 
 F17 Final Remarks
 =================
