@@ -47,8 +47,18 @@ First set up your environment variables to connect to your postgrsql database th
 
 W18 Final Remarks
 =================
-The gui game is completely redone and refactored so now it runs much smoother as well as looks much cleaner and visually pleasing
-To gain a better understanding of the code I would recommend you look at Grid.java and GameFrame.java first. This is where most of the mechanics of the game are held. There still isn't 100% test coverage so that would be a great way to understand how the code works at the same time as tackling an important issue. 
+The underlying logic of the game has been rewritten and optimized for better performance.
+The GUI game is completely redone and refactored so now it runs much smoother as well as looks much cleaner and visually pleasing.
+The grid cells resemble traditional minesweeper with similar aesthetics and colors. Furthermore we added the traditional minesweeper smiley with a fresh and updated emoji look.
+
+To gain a better understanding of the code I would recommend you look at Grid.java and GameFrame.java first. 
+This is where most of the mechanics of the game are held. Make sure to understand the underlying code for how the cells in the grid are selected to be visible.
+PathFinder class would be a good place to start to understand the logic.
+
+We would suggest that the next group starts with fixing the over cluttered main menu frame to get a 
+a better understanding of how the frames interact with one another. Also there still isn't 100% test coverage so that would be a great way to understand 
+how the code works at the same time as tackling an important issue. Only Grid.java has working JUnit tests at the moment, the tests for the GUI 
+are broken and require fixing.
 
 F17 Final Remarks
 =================
