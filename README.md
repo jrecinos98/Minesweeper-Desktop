@@ -11,7 +11,7 @@ Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
 project history
 ===============
 ```
-M16 hwangaustin | ije896 | saisrimat | W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
+W18 jrecinos98 | Mgla96 | M16 hwangaustin | ije896 | saisrimat | W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
 ```
 
 
