@@ -43,11 +43,12 @@ public class GameFrame extends JFrame {
     private JTextField minesLeftDisplay; 
     private JButton refresh;
     private JButton mainMenu;
+    private JButton smiley;
     private JButton quitMine;
     private JButton inGameHelp;
     private JButton flagBtn;
     private JPanel grid;
-
+    
 	private boolean firstClick=false;
 
 
@@ -132,15 +133,25 @@ public class GameFrame extends JFrame {
         minesLeftDisplay = new JTextField(game.getNumMines() - game.getNumFlagged());   //want this number to eventually show number of mines minus number of current flags
         minesLeftDisplay.setColumns(4);
         minesLeftDisplay.setEditable(false);
-        refresh = new JButton("Reset Game");
+        //refresh = new JButton("Reset Game"); *smileyface is also the reset game button
         mainMenu = new JButton("Main Menu");
         quitMine = new JButton("Quit Minesweeper");
         inGameHelp = new JButton("Help");
         flagBtn = new JButton("Flag"); //new ImageIcon("resource/images/flag.png"));
+
+
+        ImageIcon face = getSmileyIcon("/images/normal.png");
+        smiley = new JButton(face);
+        smiley.setPreferredSize(new Dimension(40, 40));        
+
+
+
+
+
         timeDisplay = new JTextField(game.getGameTime());
         timeDisplay.setPreferredSize( new Dimension( 60, 25 ) );
         JPanel wrapper = new JPanel( new FlowLayout(0, 0, FlowLayout.LEADING) );
-        wrapper.add(timeDisplay );
+        wrapper.add(timeDisplay);
 
         Timer t = new Timer(); //It refreshes the timeDisplay every second.
         t.schedule(new TimerTask() {
@@ -150,11 +161,18 @@ public class GameFrame extends JFrame {
                 minesLeftDisplay.setText(Integer.toString(game.getNumMines() - game.getNumFlagged())); //not efficient way to do this. Need to fix later
             }
         }, 0, 1);
-        refresh.addActionListener((ActionEvent e) -> {
+        smiley.addActionListener((ActionEvent e) -> {
             if (MineGUI.overwriteSavePrompt()) {
+
                 resetGame();
             }
         });
+       
+
+        //smiley.setIcon(getSmileyIcon("images/normal.png"));
+    
+
+
         mainMenu.addActionListener((ActionEvent e) -> {
             game.save();
             MineGUI.goToMainMenu();
@@ -172,7 +190,8 @@ public class GameFrame extends JFrame {
         toolbar.add(minesLeftDisplay);
         toolbar.add(flagBtn);
         toolbar.add(mainMenu);
-        toolbar.add(refresh);
+        toolbar.add(smiley);
+        //toolbar.add(refresh); *smiley face also the refresh
         toolbar.add(inGameHelp);
         toolbar.add(quitMine);
         toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -261,7 +280,7 @@ public class GameFrame extends JFrame {
      * @return x coordinate of refresh button
      */
     public int getRefreshX() {
-        return refresh.getX();
+        return smiley.getX();
     }
 
     /**
@@ -270,7 +289,7 @@ public class GameFrame extends JFrame {
      * @return y coordinate of refresh button
      */
     public int getRefreshY() {
-        return refresh.getY();
+        return smiley.getY();
     }
 
     /**
@@ -406,6 +425,19 @@ public class GameFrame extends JFrame {
 	return new ImageIcon(newImg);
     }
 
+    private ImageIcon getSmileyIcon(String resource) {
+        File local=new File("resources" + resource);
+        ImageIcon icon;
+        if(local.exists()){
+            icon = new ImageIcon(local.getPath());
+        } else {
+            icon = new ImageIcon(getClass().getResource(resource));
+        }
+        Image img = icon.getImage();
+
+        Image newImg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        return new ImageIcon(newImg);
+    }
 
     /**
      * restores the previous state of a game loaded from save file.
@@ -496,6 +528,8 @@ public class GameFrame extends JFrame {
                 resetButton(buttons[i][j]);
             }
         }
+        ImageIcon temp = getSmileyIcon("/images/normal.png");
+        smiley.setIcon(temp);
         game.resetGrid();
         firstClick=false;
     }
@@ -615,10 +649,15 @@ public class GameFrame extends JFrame {
 
                     char result = game.searchBox(row, col);
                     if (result == 'X') {
+                        ImageIcon temp = getSmileyIcon("/images/dead.png");
+                        smiley.setIcon(temp);
+                        //smiley.setIcon(getSmileyIcon("images/dead.png")); **Does not work for some reason
                         game.getCell(row,col).open();
                         gameLost();
                         return;
                     } else {
+                        ImageIcon temp = getSmileyIcon("/images/normal.png");
+                        smiley.setIcon(temp);
                         String soundName = "/sounds/clicked.wav";
                         playSound(soundName);
                         if (result == '0') {
@@ -636,6 +675,8 @@ public class GameFrame extends JFrame {
                     playSound(soundName);
                 }
                 else if (event.getButton() == MouseEvent.BUTTON3 || flagBtn.isSelected()) {
+                    ImageIcon temp = getSmileyIcon("/images/normal.png");
+                    smiley.setIcon(temp);
                     // If you right click or have flag button selected
                     if (game.isFlag(row, col)) {
                         deflagCell(row,col);
@@ -644,10 +685,25 @@ public class GameFrame extends JFrame {
                     }
                 }
                 if (game.getGameState() == Constants.GameState.WON) {
+                    ImageIcon temp = getSmileyIcon("/images/win.png");
+                    smiley.setIcon(temp);
+                    //smiley.setIcon(getSmileyIcon("/images/win.png"));
                     gameWonPrompt(DBConnector.isConnected());
                 }
             }
-        } // class ButtonListener
+        }
+        public void mousePressed(MouseEvent event){
+            if (game.getGameState() == Constants.GameState.PLAYING){
+                ImageIcon temp = getSmileyIcon("/images/scared.png");
+                smiley.setIcon(temp);
+            }
+        }
+
+        //public void mousePressed(MouseEvent event){
+       //     smiley.setIcon(getSmileyIcon("/images/scared.png"));
+
+        
+       // } // class ButtonListener
 
 
 
