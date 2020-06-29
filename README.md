@@ -6,8 +6,6 @@ Migrated from: https://foo.cs.ucsb.edu/56mantis/view.php?id=0000900 by http://gi
 
 Link to Javadoc: https://jrecinos98.github.io/cs56-games-minesweeper/javadoc/
 
-Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
-
 project history
 ===============
 ```
@@ -37,11 +35,13 @@ DBConnector is a class that allows the leaderboard to access the database holdin
 
 How to Run
 ==========
+To run GUI version from jar use:
 
-First set up your environment variables to connect to your postgrsql database then:
+* java -jar Minesweeper.jar GUI
 
-* To run the GuiGame, use "ant mine".
-* To run the TextGame, use "ant textmine".
+To run Text version from jar use:
+
+* java -jar Minesweeper.jar Text
 
 ![Alt Text](https://media.giphy.com/media/5z24YknBcpkmlNqyEk/giphy.gif)
 
